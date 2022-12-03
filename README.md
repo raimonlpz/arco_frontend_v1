@@ -1,6 +1,7 @@
-# Getting Started with Create React App
+# Arco - Search Engine (client)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+<img width="1438" alt="Captura de pantalla 2022-12-03 a las 19 19 13" src="https://user-images.githubusercontent.com/59086203/205455954-bb3cd5ee-c517-47d8-a8fe-e20ff9e3540f.png">
 
 ## Available Scripts
 

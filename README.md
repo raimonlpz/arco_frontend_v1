@@ -1,4 +1,4 @@
-# Arco - Search Engine (client)
+# Arco // Multi-chain Search Engine (client)
 
 
 <img width="1438" alt="Captura de pantalla 2022-12-03 a las 19 19 13" src="https://user-images.githubusercontent.com/59086203/205455954-bb3cd5ee-c517-47d8-a8fe-e20ff9e3540f.png">

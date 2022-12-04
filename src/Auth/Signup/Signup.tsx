@@ -1,20 +1,28 @@
 import { Button, Grid, Input, Spacer, Text, useInput } from "@nextui-org/react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import { Layout } from "../../Shared/Layout/Layout"
 import { FaUserAstronaut } from "react-icons/fa";
 import { pages } from "../../Shared/_utils_/routes";
+import { AuthService } from "../_services_";
 
 export const SignupPage = () => {
 
     const navigate = useNavigate();
+    const [email,setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const { value, reset, bindings } = useInput("");
 
-    const validateEmail = (value: string) => {
+    const validateEmail = (value: string): RegExpMatchArray | null => {
         return value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
     }
 
+    const validatePassword = (value: string): boolean => {
+        return value.trim().length > 0;
+    }
+
+    // To-do: fix this reactive check
     const helper = useMemo(() => {
         if (!value) {
             return {
@@ -28,6 +36,18 @@ export const SignupPage = () => {
             color: isValid ? "success" : "error"
         }
     }, [value])
+
+    const validateForm = (): boolean => {
+        return validateEmail(email)! && validatePassword(password);
+    }
+
+    const signUp = () => {
+        const auth = new AuthService();
+        auth.signup({ email, password }).then(res => {
+            const I = auth.resolveInterface(res);
+            console.log(I); 
+        })
+    }
 
     return (
         <Layout>
@@ -50,6 +70,7 @@ export const SignupPage = () => {
                         label="Email"
                         placeholder="user_web3@mail.com"
                         css={{width: "300px"}}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
             
                 </Grid>
@@ -64,17 +85,29 @@ export const SignupPage = () => {
                         label="Password"
                         placeholder="Enter your password with eye"
                         css={{width: "300px"}}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
                 </Grid>
                 <Spacer /> 
                 <Spacer />
                 <Grid>
-                    <Button color="gradient" auto ghost>
+                    <Button 
+                        color="gradient" 
+                        auto 
+                        ghost 
+                        disabled={!validateForm()}
+                        onClick={() => signUp()}
+                    >
                         Signup
                     </Button>
                 </Grid>
                 <Spacer />
-                <Button auto size="lg" css={{background: "none"}} onClick={() => navigate(pages.login)}>
+                <Button 
+                    auto 
+                    size="lg" 
+                    css={{background: "none"}} 
+                    onClick={() => navigate(pages.login)}
+                >
                     <Text size={15}>
                         Already have an account yet? Login here
                     </Text>

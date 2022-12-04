@@ -1,9 +1,12 @@
-import { Navbar, Button, Link, Text, useTheme, Avatar } from "@nextui-org/react";
+import { Navbar, Button, Link, Text, useTheme, Avatar, Popover, Grid, Row, Spacer } from "@nextui-org/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BsChevronBarContract } from 'react-icons/bs';
 import { pages } from "../_utils_/routes";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../../Auth/_store_/auth";
+
+import { IoMdLogOut } from 'react-icons/io';
+import { LocalStorage } from "../_services_";
 
 
 export default function Header() {
@@ -13,17 +16,28 @@ export default function Header() {
 
   const [activeSession, setActiveSession ] = useState(false);
 
+  const [ removeSessionData ] = useAuthStore((state) => [
+    state.removeSessionData,
+  ]);
+
   useEffect(() => {
    useAuthStore.subscribe((s) => {
     if (s.access_token)
       setActiveSession(true);
+    else 
+      setActiveSession(false);
    });
 
     return () => {
       useAuthStore.destroy();
     }
-
   }, [])
+
+
+  const handleLogout = (): void => {
+    LocalStorage.removeToken();
+    removeSessionData();
+  }
 
   return (
       <Navbar isBordered={isDark} variant="floating" css={{position: "absolute"}}>
@@ -55,14 +69,32 @@ export default function Header() {
           activeSession && (
             <Navbar.Content>
               <Navbar.Item>
+              <Popover>
+                <Popover.Trigger>
                 <Button css={{background: "none", overflow: "visible"}}>
-                <Avatar 
-                  onClick={() => {}}
-                  color="gradient"
-                  bordered
-                  size="lg"
-                  src="https://www.disneyplusinformer.com/wp-content/uploads/2022/03/Moon-Knight-Profile-Avatar.png" />
+                  <Avatar 
+                      css={{cursor: "pointer"}}
+                      onClick={() => {}}
+                      color="gradient"
+                      bordered
+                      size="lg"
+                      src="https://www.disneyplusinformer.com/wp-content/uploads/2022/03/Moon-Knight-Profile-Avatar.png" />
                 </Button>
+                </Popover.Trigger>
+                <Popover.Content>
+                <Grid.Container
+                    css={{ borderRadius: "14px", padding: "0.75rem", maxWidth: "330px" }}
+                >
+                    <Row justify="center" align="center">
+                        <Button size="sm" shadow color="error" onClick={handleLogout}>
+                          <IoMdLogOut size="20" />
+                          <Spacer />
+                          Logout
+                        </Button>
+                    </Row>
+                  </Grid.Container>
+                </Popover.Content>
+              </Popover>
               </Navbar.Item>
             </Navbar.Content>
           )

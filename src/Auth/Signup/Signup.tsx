@@ -51,11 +51,14 @@ export const SignupPage = () => {
             const I = auth.resolveInterface(res);
             switch (I) {
                 case 'TokenResponse': 
-                    LocalStorage.setToken((res as TokenResponse).access_token);
-                    setToken((res as TokenResponse).access_token)
+                    const { access_token } = res as TokenResponse;
+                    LocalStorage.setToken(access_token);
+                    setToken(access_token)
+                    navigate('/search');
                     break;
                 case 'AuthError':
                 case 'Error':
+                    // To-do: handle error with UI Helpers
                     break;
             }
         })

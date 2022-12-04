@@ -5,14 +5,18 @@ import { Layout } from "../../Shared/Layout/Layout"
 import { FaUserAstronaut } from "react-icons/fa";
 import { pages } from "../../Shared/_utils_/routes";
 import { AuthService } from "../_services_";
+import { LocalStorage } from "../../Shared/_services_";
+import { TokenResponse } from "../_models_";
+import { useAuthStore } from "../_store_/auth";
 
 export const SignupPage = () => {
 
     const navigate = useNavigate();
     const [email,setEmail] = useState('');
     const [password, setPassword] = useState('');
-
     const { value, reset, bindings } = useInput("");
+
+    const setToken = useAuthStore((state) => state.setToken);
 
     const validateEmail = (value: string): RegExpMatchArray | null => {
         return value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
@@ -45,7 +49,15 @@ export const SignupPage = () => {
         const auth = new AuthService();
         auth.signup({ email, password }).then(res => {
             const I = auth.resolveInterface(res);
-            console.log(I); 
+            switch (I) {
+                case 'TokenResponse': 
+                    LocalStorage.setToken((res as TokenResponse).access_token);
+                    setToken((res as TokenResponse).access_token)
+                    break;
+                case 'AuthError':
+                case 'Error':
+                    break;
+            }
         })
     }
 
@@ -109,7 +121,7 @@ export const SignupPage = () => {
                     onClick={() => navigate(pages.login)}
                 >
                     <Text size={15}>
-                        Already have an account yet? Login here
+                        Already have an account? Login here
                     </Text>
                 </Button>
 

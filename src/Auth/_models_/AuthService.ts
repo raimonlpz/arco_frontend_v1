@@ -1,13 +1,16 @@
 import { AuthError } from "./AuthError";
 import { CredentialsDTO } from "./CredentialsDTO";
+import { SessionResponse } from "./SessionResponse";
 import { TokenResponse } from "./TokenResponse";
 
 
 export interface IAuthService {
-    signup(credentials: CredentialsDTO): Promise<TokenResponse | AuthError | Error>
+    session(token: string): Promise<SessionResponse | AuthError | Error>;
+    signup(credentials: CredentialsDTO): Promise<TokenResponse | AuthError | Error>;
+    signin(credentials: CredentialsDTO): Promise<TokenResponse | AuthError | Error>;
     resolveInterface<T extends Object>(
         I: T
-    ): AuthResponse
+    ): AuthResponse;
 }
 
-export type AuthResponse = 'TokenResponse' | 'AuthError' | 'Error';
+export type AuthResponse = 'TokenResponse' | 'SessionResponse' | 'AuthError' | 'Error';

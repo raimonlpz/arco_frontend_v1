@@ -8,6 +8,7 @@ import { AuthService } from "../_services_";
 import { LocalStorage } from "../../Shared/_services_";
 import { AuthError, TokenResponse } from "../_models_";
 import { useAuthStore } from "../_store_/auth";
+import { validateEmail, validatePassword } from "../_utils_/utils";
 
 export const SignupPage = () => {
 
@@ -28,14 +29,6 @@ export const SignupPage = () => {
         session, 
         navigate
     ])
-
-    const validateEmail = (value: string): RegExpMatchArray | null => {
-        return value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
-    }
-
-    const validatePassword = (value: string): boolean => {
-        return value.trim().length > 0;
-    }
 
     const validate2Password = (): boolean => {
         return password === password2 && 

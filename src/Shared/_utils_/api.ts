@@ -1,11 +1,15 @@
-
-const API_URL = "http://localhost:3333"
+import { API_DEV_URL, API_PROD_URL } from "./constants"
 
 export class API_ROUTES {
+    static isDevelopment = () => window.location.href.includes('localhost');
 
+    static BASE = this.isDevelopment() 
+        ? API_DEV_URL 
+        : API_PROD_URL;
+    
     static AUTH = {
-        session: `${API_URL}/users/me`,
-        signup: `${API_URL}/auth/signup`,
-        signin: `${API_URL}/auth/signin`
+        session: `${this.BASE}/users/me`,
+        signup: `${this.BASE}/auth/signup`,
+        signin: `${this.BASE}/auth/signin`
     }
 }

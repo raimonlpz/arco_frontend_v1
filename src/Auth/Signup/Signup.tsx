@@ -1,5 +1,5 @@
-import { Button, Grid, Input, Modal, Spacer, Text, useInput } from "@nextui-org/react";
-import { useEffect, useMemo, useState } from "react";
+import { Button, Grid, Input, Modal, Spacer, Text } from "@nextui-org/react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import { Layout } from "../../Shared/Layout/Layout"
 import { FaUserAstronaut } from "react-icons/fa";
@@ -12,9 +12,10 @@ import { useAuthStore } from "../_store_/auth";
 export const SignupPage = () => {
 
     const navigate = useNavigate();
-    const [email,setEmail] = useState('');
+
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { value, reset, bindings } = useInput("");
+    const [password2, setPassword2] = useState('');
 
     const [signupError, setSignupError] = useState(false);
     const [signupErrorMsg, setSignupErrorMsg] = useState('');
@@ -36,23 +37,14 @@ export const SignupPage = () => {
         return value.trim().length > 0;
     }
 
-    // To-do: fix this reactive check
-    const helper = useMemo(() => {
-        if (!value) {
-            return {
-                text: "",
-                color: ""
-            }
-        }
-        const isValid = validateEmail(value);
-        return {
-            text: isValid ? "Correct email" : "Enter a valid email",
-            color: isValid ? "success" : "error"
-        }
-    }, [value])
+    const validate2Password = (): boolean => {
+        return password === password2 && 
+            validatePassword(password) && 
+            validatePassword(password2);
+    }
 
     const validateForm = (): boolean => {
-        return validateEmail(email)! && validatePassword(password);
+        return validateEmail(email)! && validate2Password();
     }
 
     const signUp = () => {
@@ -79,26 +71,60 @@ export const SignupPage = () => {
         })
     }
 
+    /**
+     * UI form helpers
+     */
+    const emailStats = (): {
+        color: "success" | "warning",
+        msg: string
+    } => {
+        return validateEmail(email) ? 
+        {
+            color: 'success',
+            msg: 'Correct email'
+        } : 
+        {
+            color: 'warning',
+            msg: 'Enter a valid email'
+        };
+    }
+
+    const passwordStats = (): {
+        color: "success" | "error",
+        msg: string
+    } => {
+        return validate2Password() ?
+        {
+            color: "success",
+            msg: ""
+        } : 
+        {
+            color: "error",
+            msg: "Passwords do not match"
+        }
+    }
+
     return (
         <Layout>
             <Grid.Container css={{display: "flex", flexDirection:"column", alignItems: "center"}}>
+            <Spacer />
+            <Spacer />
                 <Grid>
-                    <FaUserAstronaut size="60" />
+                    <FaUserAstronaut size="50" />
                 </Grid>
                 <Spacer />
                 <Grid>
                     <Input
-                        {...bindings}
+                        autoComplete="false"
                         clearable 
                         shadow={false}
-                        onClearClick={reset}
-                        status={helper.color as any}
-                        color={helper.color as any}
-                        helperColor={helper.color as any}
-                        helperText={helper.text}
+                        status={emailStats().color}
+                        color={emailStats().color}
+                        helperColor={emailStats().color}
+                        helperText={emailStats().msg}
                         type="email"
                         label="Email"
-                        placeholder="user_web3@mail.com"
+                        placeholder="user@mail.com"
                         css={{width: "300px"}}
                         onChange={(e) => setEmail(e.target.value)}
                     />
@@ -107,10 +133,11 @@ export const SignupPage = () => {
                 <Spacer />
                 <Grid>
                     <Input.Password 
+                        autoComplete="false"
                         clearable 
-                        color="warning"
+                        color={validate2Password() ? "success" : "warning"}
                         initialValue="123"
-                        helperText="Insecure password"
+                        helperText="Encrypted password 🔒"
                         type="password"
                         label="Password"
                         placeholder="Enter your password with eye"
@@ -118,7 +145,29 @@ export const SignupPage = () => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </Grid>
-                <Spacer /> 
+                {
+                    password.length > 0 && (
+                        <>
+                            <Spacer /> 
+                            <Grid>
+                                <Input.Password 
+                                    clearable 
+                                    color={passwordStats().color}
+                                    status={passwordStats().color}
+                                    helperText={passwordStats().msg}
+                                    initialValue="123"
+                                    type="password"
+                                    label="Repeat Password"
+                                    placeholder="Enter your same password"
+                                    css={{width: "300px"}}
+                                    onChange={(e) => setPassword2(e.target.value)}
+                                />
+                            </Grid>
+                        </>
+                    )
+                }
+
+                <Spacer />
                 <Spacer />
                 <Grid>
                     <Button 
@@ -139,7 +188,7 @@ export const SignupPage = () => {
                     onClick={() => navigate(pages.login)}
                 >
                     <Text size={15}>
-                        Already have an account? Login here
+                        Already have an account? <Text b size={15}>Login here</Text>
                     </Text>
                 </Button>
 

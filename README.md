@@ -1,7 +1,8 @@
-# Arco // Multi-chain Search Engine (client)
+# Arco | Multi-chain Search Engine (front-end)
 
 
-<img width="1438" alt="Captura de pantalla 2022-12-03 a las 19 19 13" src="https://user-images.githubusercontent.com/59086203/205455954-bb3cd5ee-c517-47d8-a8fe-e20ff9e3540f.png">
+<img width="1436" alt="Captura de pantalla 2022-12-06 a las 21 24 24" src="https://user-images.githubusercontent.com/59086203/206015238-71593587-ac71-40da-9081-fbf97236ee15.png">
+
 
 ## Available Scripts
 

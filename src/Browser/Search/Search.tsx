@@ -41,8 +41,9 @@ export const SearchPage = () => {
                 </Button>
             </Grid>
             <Modal
+                blur
                 closeButton
-                aria-labelledby="modal-title"
+                aria-labelledby="Advanced Search"
                 open={openSettings}
                 onClose={() => setOpenSettings(false)}
             >

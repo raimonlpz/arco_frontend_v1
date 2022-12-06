@@ -1,4 +1,4 @@
-import { Button, Grid, Input, Spacer, Text, useInput } from "@nextui-org/react";
+import { Button, Grid, Input, Modal, Spacer, Text, useInput } from "@nextui-org/react";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import { Layout } from "../../Shared/Layout/Layout"
@@ -6,7 +6,7 @@ import { FaUserAstronaut } from "react-icons/fa";
 import { pages } from "../../Shared/_utils_/routes";
 import { AuthService } from "../_services_";
 import { LocalStorage } from "../../Shared/_services_";
-import { TokenResponse } from "../_models_";
+import { AuthError, TokenResponse } from "../_models_";
 import { useAuthStore } from "../_store_/auth";
 
 export const SignupPage = () => {
@@ -15,6 +15,9 @@ export const SignupPage = () => {
     const [email,setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { value, reset, bindings } = useInput("");
+
+    const [signupError, setSignupError] = useState(false);
+    const [signupErrorMsg, setSignupErrorMsg] = useState('');
 
     const [ setToken, session ] = useAuthStore((state) => [ state.setToken, state.access_token ]);
 
@@ -61,11 +64,16 @@ export const SignupPage = () => {
                     const { access_token } = res as TokenResponse;
                     LocalStorage.setToken(access_token);
                     setToken(access_token)
-                    navigate('/search');
                     break;
                 case 'AuthError':
+                    const autherr = res as AuthError;
+                    setSignupError(true);
+                    setSignupErrorMsg(`${autherr.error} | ${autherr.message}`);
+                    break;
                 case 'Error':
-                    // To-do: handle error with UI Helpers
+                    const err = res as Error;
+                    setSignupError(true);
+                    setSignupErrorMsg(`${err.message}`);
                     break;
             }
         })
@@ -136,6 +144,30 @@ export const SignupPage = () => {
                 </Button>
 
             </Grid.Container>
+
+            <Modal
+                closeButton 
+                blur 
+                aria-labelledby="Error"    
+                open={signupError}
+                onClose={() => setSignupError(false)}
+            >
+                <Modal.Header>
+                    <Text id="Signup Error" size={18}>
+                        Sign up <Text b size={18}> Error</Text>
+                    </Text>
+                </Modal.Header>
+                <Modal.Body css={{alignItems:"center"}}>
+                    <Text size={15}>
+                        {signupErrorMsg}
+                    </Text>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button auto flat color="error" onClick={() => setSignupError(false)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </Layout>
     )
 }

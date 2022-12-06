@@ -1,4 +1,4 @@
-import { Navbar, Button, Link, Text, useTheme, Avatar, Popover, Grid, Row, Spacer } from "@nextui-org/react";
+import { Navbar, Button, Link, Text, useTheme, Avatar, Popover, Grid, Row, Spacer, Tooltip } from "@nextui-org/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BsChevronBarContract } from 'react-icons/bs';
 import { pages } from "../_utils_/routes";
@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import { useAuthStore } from "../../Auth/_store_/auth";
 
 import { IoMdLogOut } from 'react-icons/io';
+import { BiSearchAlt, BiCategoryAlt } from 'react-icons/bi';
+import { TbActivity } from 'react-icons/tb';
+import { CgProfile } from 'react-icons/cg';
 import { LocalStorage } from "../_services_";
 
 
@@ -15,10 +18,7 @@ export default function Header() {
   const location = useLocation();
 
   const [activeSession, setActiveSession ] = useState(false);
-
-  const [ removeSessionData ] = useAuthStore((state) => [
-    state.removeSessionData,
-  ]);
+  const removeSessionData = useAuthStore((state) => state.removeSessionData);
 
   useEffect(() => {
    useAuthStore.subscribe((s) => {
@@ -37,6 +37,7 @@ export default function Header() {
   const handleLogout = (): void => {
     LocalStorage.removeToken();
     removeSessionData();
+    navigate('/search');
   }
 
   return (
@@ -50,19 +51,27 @@ export default function Header() {
             isActive={location.pathname === pages.root || location.pathname === pages.search} 
             onClick={() => navigate('/search')}
           >
-            Search
+            <Tooltip content="Search" color="invert" placement="bottom">
+              <BiSearchAlt size="35" />
+            </Tooltip>
           </Navbar.Link>
+          <Spacer />
           <Navbar.Link 
             isActive={location.pathname === pages.categories} 
             onClick={() => navigate('/categories')}
           >
-            Categories
+            <Tooltip content="Categories" color="invert" placement="bottom">
+              <BiCategoryAlt size="35" />
+            </Tooltip>
           </Navbar.Link>
+          <Spacer />
           <Navbar.Link
             isActive={location.pathname === pages.activity} 
             onClick={() => navigate('/activity')}
           >
-            Activity
+            <Tooltip content="Activity" color="invert" placement="bottom">
+              <TbActivity size="35" />
+            </Tooltip>
           </Navbar.Link>
         </Navbar.Content>
         {
@@ -82,16 +91,30 @@ export default function Header() {
                 </Button>
                 </Popover.Trigger>
                 <Popover.Content>
-                <Grid.Container
+                  <Grid.Container
                     css={{ borderRadius: "14px", padding: "0.75rem", maxWidth: "330px" }}
-                >
+                  >
                     <Row justify="center" align="center">
-                        <Button size="sm" shadow color="error" onClick={handleLogout}>
-                          <IoMdLogOut size="20" />
-                          <Spacer />
-                          Logout
-                        </Button>
+                    <Navbar.Link
+                      isActive={location.pathname === pages.profile} 
+                      onClick={() => navigate('/profile')}
+                    >
+                        <Tooltip content="My Profile" color="invert" placement="top">
+                          <CgProfile size="35" />
+                        </Tooltip>
+                    </Navbar.Link>
                     </Row>
+                  </Grid.Container>
+                  <Grid.Container
+                      css={{ borderRadius: "14px", padding: "0.75rem", maxWidth: "330px" }}
+                  >
+                      <Row justify="center" align="center">
+                          <Button size="sm" shadow color="error" onClick={handleLogout}>
+                            <IoMdLogOut size="20" />
+                            <Spacer />
+                            Logout
+                          </Button>
+                      </Row>
                   </Grid.Container>
                 </Popover.Content>
               </Popover>

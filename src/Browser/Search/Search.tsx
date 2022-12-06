@@ -1,4 +1,4 @@
-import { Button, Grid, Input, Modal, Spacer, Text } from "@nextui-org/react";
+import { Button, Grid, Input, Modal, Spacer, Text, Tooltip } from "@nextui-org/react";
 import { Layout } from "../../Shared/Layout/Layout";
 import { BsChevronBarContract, BsSearch } from 'react-icons/bs';
 import { GoSettings } from 'react-icons/go'
@@ -26,7 +26,9 @@ export const SearchPage = () => {
                     status="default"                    
                 />
                 <Button auto size="lg" css={{alignSelf: "end", background: "none"}}>
-                   <GoSettings size={30} onClick={() => setOpenSettings(true)} />
+                <Tooltip content="Advanced Search" color="invert" placement="bottom">
+                    <GoSettings size={30} onClick={() => setOpenSettings(true)} />
+                </Tooltip>
                 </Button>
                 <Button bordered rounded color="gradient" auto size="lg">
                     Try your luck <span style={{paddingLeft: ".5rem"}}><BsSearch /></span>

@@ -6,6 +6,7 @@ import { SignupPage } from "./Auth/Signup/Signup";
 import { SearchPage } from "./Browser/Search/Search";
 import { CategoriesPage } from "./Categories/Categories";
 import { ActivityPage } from "./Feed/Activity";
+import { ProfilePage } from "./Profile/Profile";
 import Header from "./Shared/Header/Header";
 import NotFoundPage from "./Shared/NotFound/NotFound";
 import { useSession } from "./Shared/_hooks_";
@@ -29,6 +30,7 @@ const Root = () => {
             <Route path={pages.activity} element={<ActivityPage />}></Route>
             <Route path={pages.login} element={<LoginPage />}></Route>
             <Route path={pages.signup} element={<SignupPage />}></Route>
+            <Route path={pages.profile} element={<ProfilePage />}></Route>
             <Route path="*" element={<NotFoundPage />}></Route>
           </Routes>
         </Router>

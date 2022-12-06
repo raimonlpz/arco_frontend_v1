@@ -1,5 +1,5 @@
 import { Button, Grid, Input, Spacer, Text, useInput } from "@nextui-org/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import { Layout } from "../../Shared/Layout/Layout"
 import { FaUserAstronaut } from "react-icons/fa";
@@ -16,7 +16,14 @@ export const SignupPage = () => {
     const [password, setPassword] = useState('');
     const { value, reset, bindings } = useInput("");
 
-    const setToken = useAuthStore((state) => state.setToken);
+    const [ setToken, session ] = useAuthStore((state) => [ state.setToken, state.access_token ]);
+
+    useEffect(() => {
+        if (session) navigate('/search');
+    }, [
+        session, 
+        navigate
+    ])
 
     const validateEmail = (value: string): RegExpMatchArray | null => {
         return value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
@@ -48,7 +55,7 @@ export const SignupPage = () => {
     const signUp = () => {
         const auth = new AuthService();
         auth.signup({ email, password }).then(res => {
-            const I = auth.resolveInterface(res);
+            const I = auth.mapType(res);
             switch (I) {
                 case 'TokenResponse': 
                     const { access_token } = res as TokenResponse;

@@ -4,5 +4,6 @@ export const pages = {
     categories: "/categories",
     activity: "/activity",
     login: "/login",
-    signup: "/signup"
+    signup: "/signup",
+    profile: "/profile"
   } as const;

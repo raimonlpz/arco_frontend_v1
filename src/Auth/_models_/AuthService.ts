@@ -8,7 +8,7 @@ export interface IAuthService {
     session(token: string): Promise<SessionResponse | AuthError | Error>;
     signup(credentials: CredentialsDTO): Promise<TokenResponse | AuthError | Error>;
     signin(credentials: CredentialsDTO): Promise<TokenResponse | AuthError | Error>;
-    resolveInterface<T extends Object>(
+    mapType<T extends Object>(
         I: T
     ): AuthResponse;
 }

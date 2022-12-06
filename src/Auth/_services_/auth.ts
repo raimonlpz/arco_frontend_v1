@@ -1,6 +1,5 @@
 import { API_ROUTES } from "../../Shared/_utils_/api"
-import { AuthError, AuthResponse, CredentialsDTO, IAuthService, TokenResponse } from "../_models_";
-import { SessionResponse } from "../_models_/SessionResponse";
+import { AuthError, AuthResponse, CredentialsDTO, IAuthService, TokenResponse, SessionResponse } from "../_models_";
 
 
 export class AuthService implements IAuthService  {
@@ -53,7 +52,7 @@ export class AuthService implements IAuthService  {
     }
 
 
-    resolveInterface = <T extends Object>(
+    mapType = <T extends Object>(
         I: T
     ): AuthResponse => {
         if ('access_token' in I) {

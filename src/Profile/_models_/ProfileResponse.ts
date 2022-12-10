@@ -1,6 +1,14 @@
 import { ProfileDTO } from "./ProfileDTO";
 
+interface FollowRel {
+    followerId: number, // profileId
+    followingId: number // profileId
+}
+
 export interface ProfileResponse extends ProfileDTO {
-    updatedAt: string;
-    userId: number;
+    userId?: number;
+    profileId?: number;
+    updatedAt?: string;
+    followedBy?: FollowRel [];
+    following?: FollowRel[];
 }

@@ -1,9 +1,9 @@
 import create from 'zustand';
-import { ProfileDTO } from '../_models_';
+import { ProfileResponse } from '../_models_';
 
 export interface IProfileStore {
-    profile: ProfileDTO;
-    setProfile: (data: ProfileDTO) => void;
+    profile: ProfileResponse;
+    setProfile: (data: ProfileResponse) => void;
 }
 
 export const useProfileStore = create<IProfileStore>((set) => ({

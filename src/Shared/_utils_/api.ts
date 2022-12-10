@@ -12,4 +12,9 @@ export class API_ROUTES {
         signup: `${this.BASE}/auth/signup`,
         signin: `${this.BASE}/auth/signin`
     }
+
+    static PROFILE = {
+        me: `${this.BASE}/profiles/me`,
+        byId: (userId: string | number) => `${this.BASE}/profiles/${userId}`
+    }
 }

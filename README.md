@@ -1,7 +1,8 @@
 # Arco | Multi-chain Search Engine (front-end)
 
+<img width="1435" alt="Captura de pantalla 2022-12-10 a las 21 54 57" src="https://user-images.githubusercontent.com/59086203/206874898-f186583b-73cc-475d-8be5-d1ab99f17346.png">
 
-<img width="1436" alt="Captura de pantalla 2022-12-06 a las 21 24 24" src="https://user-images.githubusercontent.com/59086203/206015238-71593587-ac71-40da-9081-fbf97236ee15.png">
+
 
 
 <img width="1438" alt="Captura de pantalla 2022-12-10 a las 21 14 07" src="https://user-images.githubusercontent.com/59086203/206874573-b6bd9e43-c281-4182-ac0c-bceb88554ddf.png">

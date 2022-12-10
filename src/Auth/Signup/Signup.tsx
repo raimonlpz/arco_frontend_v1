@@ -169,6 +169,7 @@ export const SignupPage = () => {
                         ghost 
                         disabled={!validateForm()}
                         onClick={() => signUp()}
+                        size='lg'
                     >
                         Signup
                     </Button>

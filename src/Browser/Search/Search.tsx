@@ -12,7 +12,7 @@ export const SearchPage = () => {
 
     return (
         <Layout>
-            <Grid css={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+            <Grid css={{display: "flex", flexDirection: "column", alignItems: "center", marginTop: "4rem"}}>
                 <BsChevronBarContract size="140" />
                 <Input 
                     css={{
@@ -21,6 +21,7 @@ export const SearchPage = () => {
                     }}
                     size="xl" 
                     bordered
+                    color="secondary"
                     shadow={true} 
                     labelPlaceholder="Search" 
                     status="default"                    

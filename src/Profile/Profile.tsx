@@ -5,6 +5,11 @@ import { useAuthStore } from "../Auth/_store_/auth"
 import { Layout } from "../Shared/Layout/Layout"
 import { useProfileStore } from "./_store_/profile";
 
+import { HiUsers } from 'react-icons/hi';
+import { FaSearchDollar } from 'react-icons/fa';
+import { SiSubstack } from 'react-icons/si';
+import { MdFavorite } from 'react-icons/md';
+
 export const ProfilePage = () => {
     const params = useParams();
     const navigate = useNavigate();
@@ -63,7 +68,31 @@ export const ProfilePage = () => {
         <Layout>
             { isMyProfile && (
                 <>
-                    <Grid.Container gap={2} css={{justifyContent: "center"}}>
+                    <Grid.Container gap={2} css={{justifyContent: "space-evenly" }}>
+
+                        <Grid css={{alignSelf:"center"}}>  
+                            <Button.Group size="md" vertical color="gradient" bordered >
+                                <Button >
+                                    <FaSearchDollar size="20" />
+                                    <Spacer x={.4} />
+                                    Search Historial
+                                </Button>
+                                <Spacer />
+                                <Spacer />
+                                <Button>
+                                    <SiSubstack size="20" />
+                                    <Spacer x={.4} />
+                                    Subscriptions
+                                </Button>
+                                <Spacer />
+                                <Spacer />
+                                <Button>
+                                    <MdFavorite size="20" color="white" />
+                                    <Spacer x={.4} />
+                                    Favorites
+                                </Button>
+                            </Button.Group>
+                        </Grid>
                     
                         <Grid>
                             <Spacer />
@@ -133,6 +162,7 @@ export const ProfilePage = () => {
                             <Button 
                                 css={{ marginLeft: "50%", transform: "translateX(-50%)"}}
                                 color="gradient" 
+                                size='lg'
                                 auto 
                                 ghost 
                                 onClick={() => {}}
@@ -140,6 +170,16 @@ export const ProfilePage = () => {
                                 Save
                             </Button>
 
+                        </Grid>
+
+
+                        <Grid css={{alignSelf:"center"}}>  
+                            <Button.Group size="md" vertical borderWeight="light" color="error" bordered >
+                                <Button><HiUsers size="20" /> <b style={{margin: '.25rem', fontSize: "2rem"}}> 12</b> <i>Followers</i> </Button>
+                                <Spacer />
+                                <Spacer />
+                                <Button><HiUsers size="20" /> <b style={{margin: '.25rem', fontSize: "2rem"}}> 23</b> <i>Following</i></Button>
+                            </Button.Group>
                         </Grid>
 
                     </Grid.Container>

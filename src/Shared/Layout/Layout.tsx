@@ -6,12 +6,11 @@ export const Layout = ({ children }: any) => (
     css={{
       maxW: "100%",
       height: "min-content",
-      minHeight: "100vh",
       alignItems: "center",
       justifyContent: "center",
-      display: "flex",
+      display: "flex"
     }}
   >
-    {children}
+      {children}
   </Box>
 );

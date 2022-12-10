@@ -82,6 +82,8 @@ export const LoginPage = () => {
     return (
         <Layout >
             <Grid.Container css={{display: "flex", flexDirection:"column", alignItems: "center"}}>
+            <Spacer />
+            <Spacer />
                 <Grid>
                     <FaUserNinja size="50" />
                 </Grid>
@@ -125,6 +127,7 @@ export const LoginPage = () => {
                         color="gradient" 
                         auto 
                         ghost
+                        size='lg'
                         disabled={!validateForm()}
                         onClick={() => login()}
                     >

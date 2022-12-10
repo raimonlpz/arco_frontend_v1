@@ -44,7 +44,7 @@ export default function Header() {
   }
 
   return (
-      <Navbar isBordered={isDark} variant="floating" css={{position: "absolute"}}>
+      <Navbar isBordered={isDark} variant="floating" css={{position: "sticky"}}>
         <Navbar.Brand>
             <BsChevronBarContract size="40" />
             <Text size="10" css={{paddingLeft: ".5rem"}}>the blockchain explorer</Text>

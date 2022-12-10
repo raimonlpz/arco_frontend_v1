@@ -29,7 +29,7 @@ export const LoginPage = () => {
     }, [
         session, 
         navigate
-    ])
+    ]);
 
 
     const validateForm = (): boolean => {

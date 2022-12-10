@@ -5,5 +5,6 @@ export const pages = {
     activity: "/activity",
     login: "/login",
     signup: "/signup",
-    profile: "/profile"
+    profileMe: "/profile/me",
+    profileUser: "/profile/:id"
   } as const;

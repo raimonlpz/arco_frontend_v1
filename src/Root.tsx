@@ -30,7 +30,8 @@ const Root = () => {
             <Route path={pages.activity} element={<ActivityPage />}></Route>
             <Route path={pages.login} element={<LoginPage />}></Route>
             <Route path={pages.signup} element={<SignupPage />}></Route>
-            <Route path={pages.profile} element={<ProfilePage />}></Route>
+            <Route path={pages.profileMe} element={<ProfilePage />}></Route>
+            <Route path={pages.profileUser} element={<ProfilePage />}></Route>
             <Route path="*" element={<NotFoundPage />}></Route>
           </Routes>
         </Router>

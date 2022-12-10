@@ -1,10 +1,10 @@
 import { API_ROUTES } from "../../Shared/_utils_/api";
-import { ProfileDTO, IProfileService } from "../_models_";
+import { ProfileDTO, IProfileService, ProfileError, ProfileResponse, ProfileResponseType } from "../_models_";
 
 
 export class ProfileService implements IProfileService {
 
-    getMyProfile = async (token: string): Promise<any> => {
+    getMyProfile = async (token: string): Promise<ProfileResponse | ProfileError | Error> => {
 
         const requestOptions = {
             method: 'GET',
@@ -16,12 +16,12 @@ export class ProfileService implements IProfileService {
 
         return await fetch(API_ROUTES.PROFILE.me, requestOptions) 
             .then((res: Response) => res.json())
-            .then((data: any) => data)
+            .then((data: ProfileError | ProfileResponse) => data)
             .catch((error: Error) => error);
     }
 
 
-    getProfileById = async (token: string, userId: string | number): Promise<any> => {
+    getProfileById = async (token: string, userId: string | number): Promise<ProfileResponse | ProfileError | Error> => {
         
         const requestOptions = {
             method: 'GET',
@@ -33,12 +33,12 @@ export class ProfileService implements IProfileService {
 
         return await fetch(API_ROUTES.PROFILE.byId(userId), requestOptions) 
             .then((res: Response) => res.json())
-            .then((data: any) => data)
+            .then((data: ProfileError | ProfileResponse) => data)
             .catch((error: Error) => error);
     }
 
 
-    patchMyProfile = async (token: string, profile: ProfileDTO): Promise<any> => {
+    patchMyProfile = async (token: string, profile: ProfileDTO): Promise<ProfileResponse | ProfileError | Error> => {
 
         const requestOptions = {
             method: 'PATCH',
@@ -51,10 +51,19 @@ export class ProfileService implements IProfileService {
 
         return await fetch(API_ROUTES.PROFILE.me, requestOptions)
             .then((res: Response) => res.json())
-            .then((data: any) => data)
+            .then((data: ProfileError | ProfileResponse) => data)
             .catch((error: Error) => error);
     }
 
-
-    mapType<T extends Object>(I: T) { }
+    mapType = <T extends Object>(
+        I: T
+    ): ProfileResponseType => { 
+        if ('handle' in I) {
+            return 'ProfileResponse';
+        } else if ('message' in I) {
+            return 'ProfileError';
+        } else {
+            return 'Error';
+        }
+    }
 }

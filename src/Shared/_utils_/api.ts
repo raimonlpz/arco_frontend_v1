@@ -1,9 +1,9 @@
 import { API_DEV_URL, API_PROD_URL } from "./constants"
+import { isDevelopment } from "./functions";
 
 export class API_ROUTES {
-    static isDevelopment = () => window.location.href.includes('localhost');
 
-    static BASE = this.isDevelopment() 
+    static BASE = isDevelopment() 
         ? API_DEV_URL 
         : API_PROD_URL;
     

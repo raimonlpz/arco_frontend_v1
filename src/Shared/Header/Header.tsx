@@ -10,6 +10,8 @@ import { BiSearchAlt, BiCategoryAlt } from 'react-icons/bi';
 import { TbActivity } from 'react-icons/tb';
 import { CgProfile } from 'react-icons/cg';
 import { LocalStorage } from "../_services_";
+import { useProfileStore } from "../../Profile/_store_/profile";
+import { DEFAULTS } from "../_utils_/constants";
 
 
 export default function Header() {
@@ -19,7 +21,8 @@ export default function Header() {
 
   const [activeSession, setActiveSession ] = useState(false);
   const removeSessionData = useAuthStore((state) => state.removeSessionData);
-
+  const profile = useProfileStore((state) => state.profile);
+  
   useEffect(() => {
    useAuthStore.subscribe((s) => {
     if (s.access_token)
@@ -87,7 +90,7 @@ export default function Header() {
                       color="gradient"
                       bordered
                       size="lg"
-                      src="https://www.disneyplusinformer.com/wp-content/uploads/2022/03/Moon-Knight-Profile-Avatar.png" />
+                      src={profile.avatarUrl ?? DEFAULTS.avatar} />
                 </Button>
                 </Popover.Trigger>
                 <Popover.Content>
@@ -96,8 +99,8 @@ export default function Header() {
                   >
                     <Row justify="center" align="center">
                     <Navbar.Link
-                      isActive={location.pathname === pages.profile} 
-                      onClick={() => navigate('/profile')}
+                      isActive={location.pathname === pages.profileMe} 
+                      onClick={() => navigate('/profile/me')}
                     >
                         <Tooltip content="My Profile" color="invert" placement="top">
                           <CgProfile size="35" />

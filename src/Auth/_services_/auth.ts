@@ -1,5 +1,5 @@
 import { API_ROUTES } from "../../Shared/_utils_/api"
-import { AuthError, AuthResponse, CredentialsDTO, IAuthService, TokenResponse, SessionResponse } from "../_models_";
+import { AuthError, CredentialsDTO, IAuthService, TokenResponse, SessionResponse, AuthResponseType } from "../_models_";
 
 
 export class AuthService implements IAuthService  {
@@ -54,7 +54,7 @@ export class AuthService implements IAuthService  {
 
     mapType = <T extends Object>(
         I: T
-    ): AuthResponse => {
+    ): AuthResponseType => {
         if ('access_token' in I) {
             return 'TokenResponse';
         } else if ('email' in I) {

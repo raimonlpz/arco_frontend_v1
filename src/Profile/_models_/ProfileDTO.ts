@@ -1,5 +1,6 @@
 
 export interface ProfileDTO {
+    id?: number;
     bio?: string;
     urls?: string[];
     profession?: string;

@@ -10,7 +10,7 @@ export interface IAuthService {
     signin(credentials: CredentialsDTO): Promise<TokenResponse | AuthError | Error>;
     mapType<T extends Object>(
         I: T
-    ): AuthResponse;
+    ): AuthResponseType;
 }
 
-export type AuthResponse = 'TokenResponse' | 'SessionResponse' | 'AuthError' | 'Error';
+export type AuthResponseType = 'TokenResponse' | 'SessionResponse' | 'AuthError' | 'Error';

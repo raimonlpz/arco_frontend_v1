@@ -9,6 +9,6 @@ export interface ProfileResponse extends ProfileDTO {
     userId?: number;
     profileId?: number;
     updatedAt?: string;
-    followedBy?: FollowRel [];
+    followedBy?: FollowRel[];
     following?: FollowRel[];
 }

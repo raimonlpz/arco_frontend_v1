@@ -8,5 +8,5 @@ export interface ProfileDTO {
     lastName?: string; 
     handle?: string; 
     avatarUrl?: string;
-    hexAddressId?: string;
+    hexAddress?: string;
 }

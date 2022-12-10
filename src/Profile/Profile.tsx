@@ -10,6 +10,9 @@ import { FaSearchDollar } from 'react-icons/fa';
 import { SiSubstack } from 'react-icons/si';
 import { MdFavorite } from 'react-icons/md';
 import { FaUserAstronaut } from 'react-icons/fa';
+import { ProfileService } from "./_services_";
+import { ProfileResponse } from "./_models_";
+import { SearchService } from "../Browser/Search/_services_";
 
 export const ProfilePage = () => {
     const params = useParams();
@@ -21,10 +24,10 @@ export const ProfilePage = () => {
      */
     const [bio, setBio] = useState('');
     const [handle, setHandle] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [hexWallet, setHexWallet] = useState('');
-    const [avatarUrl, setAvatarUrl] = useState('');
     const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [hexAddress, setHexAddress] = useState('');
+    const [avatarUrl, setAvatarUrl] = useState('');
     const [profession, setProfession] = useState('');
 
     const [
@@ -53,16 +56,15 @@ export const ProfilePage = () => {
             // call to get User by ID (params.id)
 
         } else {
-
             setIsMyProfile(true)
-
+            // Editable Profile values
             setBio(profile.bio ?? '');
             setHandle(profile.handle ?? '');
             setAvatarUrl(profile.avatarUrl ?? '');
             setFirstName(profile.firstName ?? '');
             setLastName(profile.lastName ?? '');
             setProfession(profile.profession ?? '');
-            setHexWallet(profile.hexAddressId ?? '');
+            setHexAddress(profile.hexAddress ?? '');
         }
 
     }, [
@@ -74,6 +76,49 @@ export const ProfilePage = () => {
     ]);
 
 
+    const patchProfile = async () => {
+        const profileService = new ProfileService();
+        profileService.patchMyProfile(session!, {
+            bio,
+            handle,
+            firstName,
+            lastName,
+            avatarUrl,
+            profession,
+            hexAddress,
+        }).then((res) => {
+            const I = profileService.mapType(res);
+            switch (I) {
+                case 'ProfileResponse':
+                    setProfile(res as ProfileResponse);
+                    break;
+                case 'ProfileError':
+                    // TODO: UI helper-modal showing error
+                    break;
+                case 'Error':
+                    break;
+            }
+        })
+    }
+
+
+    const getMySearches = async () => {
+        const searchService = new SearchService();
+        searchService.getMySearches(session!).then((res) => {
+            const I = searchService.mapType(res);
+            switch (I) {
+                case 'SearchResponse':
+                    console.log(res);
+                    break;
+                case 'SearchError':
+                    break;
+                case 'Error':
+                    break;
+            }
+        })
+    }
+
+
     return (
         <Layout>
             { isMyProfile && (
@@ -82,7 +127,7 @@ export const ProfilePage = () => {
 
                         <Grid css={{marginTop: "3rem"}}>  
                             <Button.Group size="md" vertical color="gradient" bordered >
-                                <Button >
+                                <Button onClick={getMySearches}>
                                     <FaSearchDollar size="20" />
                                     <Spacer x={.4} />
                                     Search Historial
@@ -195,8 +240,8 @@ export const ProfilePage = () => {
                                 label="Wallet"
                                 placeholder="0x..."
                                 css={{width: "400px"}}
-                                value={hexWallet}
-                                onChange={(e) => setHexWallet(e.target.value)}
+                                value={hexAddress}
+                                onChange={(e) => setHexAddress(e.target.value)}
                             />
                             <Spacer />
                             <Spacer />
@@ -206,7 +251,7 @@ export const ProfilePage = () => {
                                 size='lg'
                                 auto 
                                 ghost 
-                                onClick={() => {}}
+                                onClick={patchProfile}
                             >
                                 Save
                             </Button>

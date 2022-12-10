@@ -1,5 +1,6 @@
 {
   "name": "arc_front",
+  "author": "Raimon López Mor @UOC",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

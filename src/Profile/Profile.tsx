@@ -132,7 +132,7 @@ export const ProfilePage = () => {
                 <>
                     <Grid.Container gap={2} css={{justifyContent: "space-evenly" }}>
 
-                        <Grid css={{marginTop: "3rem"}}>  
+                        <Grid css={{marginTop: "3rem", zIndex:"1"}}>  
                             <Button.Group size="md" vertical color="gradient" bordered >
                                 <Button onClick={getMySearches}>
                                     <FaSearchDollar size="20" />
@@ -265,7 +265,7 @@ export const ProfilePage = () => {
 
                         </Grid>
 
-                        <Grid css={{marginTop: "3rem"}}> 
+                        <Grid css={{marginTop: "3rem",  zIndex:"1"}}> 
                             <Button.Group size="md" vertical borderWeight="light" color="error" bordered >
                                 <Button>
                                     <HiUsers size="20" /> 

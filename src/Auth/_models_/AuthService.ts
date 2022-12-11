@@ -13,4 +13,8 @@ export interface IAuthService {
     ): AuthResponseType;
 }
 
-export type AuthResponseType = 'TokenResponse' | 'SessionResponse' | 'AuthError' | 'Error';
+export type AuthResponseType = 
+    | 'TokenResponse' 
+    | 'SessionResponse' 
+    | 'AuthError' 
+    | 'Error';

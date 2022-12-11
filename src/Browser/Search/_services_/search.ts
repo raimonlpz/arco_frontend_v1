@@ -56,7 +56,7 @@ export class SearchService implements ISearchService {
     mapType = <T extends Object | Array<SearchResponse>>(
         I: T
     ): SearchResponseType => {
-        if (I.hasOwnProperty('length')) {
+        if (I.hasOwnProperty('length')) { // is Array
             return 'SearchResponse';
         } else if ('message' in I) {
             return 'SearchError';

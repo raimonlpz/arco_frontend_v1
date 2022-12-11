@@ -1,4 +1,4 @@
-import { Avatar, Button, Grid, Input, Spacer, Text, Textarea } from "@nextui-org/react";
+import { Avatar, Button, Grid, Input, Modal, Spacer, Text, Textarea, useModal } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuthStore } from "../Auth/_store_/auth"
@@ -13,11 +13,17 @@ import { FaUserAstronaut } from 'react-icons/fa';
 import { ProfileService } from "./_services_";
 import { ProfileResponse } from "./_models_";
 import { SearchService } from "../Browser/Search/_services_";
+import { SearchResponse } from "../Browser/Search/_models_";
+import { capitalizeFirstLetter } from "../Shared/_utils_/functions";
+import moment from "moment";
 
 export const ProfilePage = () => {
     const params = useParams();
     const navigate = useNavigate();
     const [isMyProfile, setIsMyProfile] = useState(false);
+
+    const [mySearches, setMySearches] = useState<SearchResponse[]>([]);
+    const { setVisible: setModalSearches, bindings: bindingsModalSearches } = useModal();
 
     /**
      * Editable values
@@ -108,7 +114,8 @@ export const ProfilePage = () => {
             const I = searchService.mapType(res);
             switch (I) {
                 case 'SearchResponse':
-                    console.log(res);
+                    setMySearches(res as SearchResponse[]);
+                    setModalSearches(true);
                     break;
                 case 'SearchError':
                     break;
@@ -282,6 +289,54 @@ export const ProfilePage = () => {
                     </Grid.Container>
                 </>
             )}
+
+            <Modal
+                scroll
+                width="50vw"
+                closeButton
+                aria-labelledby="Searches"
+                aria-describedby="My Searches historic"
+                {...bindingsModalSearches}
+            >
+                <Modal.Header>
+                    <FaSearchDollar size={40}/>
+                </Modal.Header>
+                <Modal.Body>
+                    {
+                        mySearches.map(search => (
+                            search.intents[0] && (
+                                    <div style={{display: "flex", flexDirection: "row" }} key={search.id}>
+                                        <Avatar 
+                                            css={{ size: "$10" }}
+                                            src={avatarUrl}
+                                            color="gradient"
+                                            bordered
+                                        />
+                                        <Spacer />
+                                            <Text size="$md" onClick={() => console.log(search.query, search.id)} css={{ '&:hover': {
+                                                color: '$pink800',
+                                                cursor: "pointer"
+                                            }, }}>
+                                                {capitalizeFirstLetter(search.intents[0].value)}
+                                                <span style={{fontWeight: "bold", color:"greenyellow", display: "block", fontSize: "11.5px"}}>
+                                                    {moment(search.createdAt).format('MMMM Do YYYY, h:mm:ss').toString()}
+                                                </span>
+                                                <SiSubstack size={18} />
+                                                &nbsp;&nbsp;&nbsp;
+                                                <MdFavorite size={18} /> 
+                                            </Text>
+                               
+                                    </div>
+                            )
+                        ))
+                    }
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button auto bordered color="secondary" onClick={() => setModalSearches(false)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </Layout>
     );
 }

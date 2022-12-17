@@ -126,6 +126,28 @@ export const ProfilePage = () => {
     }
 
 
+    const handleShowFollowers = async () => {
+        const profileService = new ProfileService();
+        profileService.getProfileFollowsByIds(
+            session!, 
+            profile.followedBy?.map(follow => follow.followerId) ?? []
+        ).then((res) => {
+            console.log(res);
+        })
+    }
+
+
+    const handleShowFollowing = async () => {
+        const profileService = new ProfileService();
+        profileService.getProfileFollowsByIds(
+            session!, 
+            profile.following?.map(follow => follow.followingId) ?? []
+        ).then((res) => {
+            console.log(res);
+        })
+    }
+
+
     return (
         <Layout>
             { isMyProfile && (
@@ -267,7 +289,9 @@ export const ProfilePage = () => {
 
                         <Grid css={{marginTop: "3rem",  zIndex:"1"}}> 
                             <Button.Group size="md" vertical borderWeight="light" color="error" bordered >
-                                <Button>
+                                <Button
+                                    onClick={handleShowFollowers}
+                                >
                                     <HiUsers size="20" /> 
                                     <b style={{margin: '.25rem', fontSize: "2rem"}}> 
                                         {profile.followedBy?.length ?? 0}
@@ -276,7 +300,9 @@ export const ProfilePage = () => {
                                 </Button>
                                 <Spacer />
                                 <Spacer />
-                                <Button>
+                                <Button
+                                    onClick={handleShowFollowing}
+                                >
                                     <HiUsers size="20" />
                                     <b style={{margin: '.25rem', fontSize: "2rem"}}> 
                                         {profile.following?.length ?? 0}

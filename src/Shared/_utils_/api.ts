@@ -15,7 +15,8 @@ export class API_ROUTES {
 
     static PROFILE = {
         me: `${this.BASE}/profiles/me`,
-        byId: (userId: string | number) => `${this.BASE}/profiles/${userId}`
+        byId: (userId: string | number) => `${this.BASE}/profiles/${userId}`,
+        byIds: (userIds: (string | number)[]) => `${this.BASE}/profiles?ids=${userIds.join(',')}`
     }
 
     static SEARCH = {

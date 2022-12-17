@@ -38,6 +38,23 @@ export class ProfileService implements IProfileService {
     }
 
 
+    getProfileFollowsByIds = async (token: string, userIds: number[]): Promise<ProfileResponse[] | Error> => {
+
+        const requestOptions = {
+            method: 'GET',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        }
+
+        return await fetch(API_ROUTES.PROFILE.byIds(userIds), requestOptions)
+            .then((res: Response) => res.json())
+            .then((data: ProfileResponse[]) => data)
+            .catch((error: Error) => error);
+    }
+
+
     patchMyProfile = async (token: string, profile: ProfileDTO): Promise<ProfileResponse | ProfileError | Error> => {
 
         const requestOptions = {

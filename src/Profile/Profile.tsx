@@ -16,6 +16,7 @@ import { SearchService } from "../Browser/Search/_services_";
 import { SearchResponse } from "../Browser/Search/_models_";
 import { capitalizeFirstLetter } from "../Shared/_utils_/functions";
 import moment from "moment";
+import { DEFAULTS } from "../Shared/_utils_/constants";
 
 export const ProfilePage = () => {
     const params = useParams();
@@ -24,6 +25,13 @@ export const ProfilePage = () => {
 
     const [mySearches, setMySearches] = useState<SearchResponse[]>([]);
     const { setVisible: setModalSearches, bindings: bindingsModalSearches } = useModal();
+
+    const [followers, setFollowers] = useState<ProfileResponse[]>([]);
+    const { setVisible: setModalFollowers, bindings: bindingsModalFollowers } = useModal();
+
+    const [following, setFollowing] = useState<ProfileResponse[]>([]);
+    const { setVisible: setModalFollowing, bindings: bindingsModalFollowing } = useModal();
+
 
     /**
      * Editable values
@@ -58,6 +66,8 @@ export const ProfilePage = () => {
     useEffect(() => {
         if (!session && dataLoaded) navigate('/search')
         if (params.id) {
+
+            console.log(params.id)
 
             // call to get User by ID (params.id)
 
@@ -127,24 +137,46 @@ export const ProfilePage = () => {
 
 
     const handleShowFollowers = async () => {
-        const profileService = new ProfileService();
-        profileService.getProfileFollowsByIds(
-            session!, 
-            profile.followedBy?.map(follow => follow.followerId) ?? []
-        ).then((res) => {
-            console.log(res);
-        })
+        if (followers.length === 0) {
+            const profileService = new ProfileService();
+            await profileService.getProfileFollowsByIds(
+                session!, 
+                profile.followedBy?.map(follow => follow.followerId) ?? []
+            ).then((res) => {
+                const I = profileService.mapType(res);
+                switch (I) {
+                    case 'ProfilesArrayResponse':
+                        setFollowers(res as ProfileResponse[]);
+                        break;
+                    case 'ProfileError':
+                    case 'Error':
+                        break;
+                }
+            })
+        }
+        setModalFollowers(true);
     }
 
 
     const handleShowFollowing = async () => {
-        const profileService = new ProfileService();
-        profileService.getProfileFollowsByIds(
-            session!, 
-            profile.following?.map(follow => follow.followingId) ?? []
-        ).then((res) => {
-            console.log(res);
-        })
+        if (following.length === 0) {
+            const profileService = new ProfileService();
+            await profileService.getProfileFollowsByIds(
+                session!, 
+                profile.following?.map(follow => follow.followingId) ?? []
+            ).then((res) => {
+                const I = profileService.mapType(res);
+                switch (I) {
+                    case 'ProfilesArrayResponse':
+                        setFollowing(res as ProfileResponse[]);
+                        break;
+                    case 'ProfileError':
+                    case 'Error':
+                        break;
+                }
+            })
+        }
+        setModalFollowing(true);
     }
 
 
@@ -315,6 +347,89 @@ export const ProfilePage = () => {
                     </Grid.Container>
                 </>
             )}
+
+
+
+            <Modal
+                scroll 
+                width="20vw"
+                closeButton 
+                aria-labelledby="Followers"
+                aria-describedby="My Followers"
+                {...bindingsModalFollowers}
+            >
+                <Modal.Header>
+                    <HiUsers size="20" /> 
+                    <Text>Followers</Text>
+                </Modal.Header>
+                <Modal.Body>
+                       <ul>
+                        {
+                            followers.map((follower) => (
+                                <li key={follower.id} style={{display: "flex",  alignItems: "center"}}>
+                                      <Avatar 
+                                            css={{ size: "$10" }}
+                                            src={follower.avatarUrl ?? DEFAULTS.avatar}
+                                            color="gradient"
+                                            bordered
+                                        />
+                                        <Spacer />
+                                        <Text size="$sm" css={{ fontWeight: "bold" }}>
+                                            {follower.user?.email}
+                                        </Text>
+                                </li>
+                            ))
+                        }
+                        </ul>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button auto bordered color="secondary" onClick={() => setModalFollowers(false)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            
+            <Modal
+                scroll 
+                width="20vw"
+                closeButton 
+                aria-labelledby="Following"
+                aria-describedby="Following users"
+                {...bindingsModalFollowing}
+            >
+                <Modal.Header>
+                    <HiUsers size="20" /> 
+                    <Text>Following</Text>
+                </Modal.Header>
+                <Modal.Body>
+                       <ul>
+                        {
+                            following.map((follow) => (
+                                <li key={follow.id} style={{display: "flex",  alignItems: "center"}}>
+                                      <Avatar 
+                                            css={{ size: "$10" }}
+                                            src={follow.avatarUrl ?? DEFAULTS.avatar}
+                                            color="gradient"
+                                            bordered
+                                        />
+                                        <Spacer />
+                                        <Text size="$sm" css={{ fontWeight: "bold" }}>
+                                            {follow.user?.email}
+                                        </Text>
+                                </li>
+                            ))
+                        }
+                        </ul>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button auto bordered color="secondary" onClick={() => setModalFollowing(false)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+
 
             <Modal
                 scroll

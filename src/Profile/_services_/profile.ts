@@ -38,7 +38,7 @@ export class ProfileService implements IProfileService {
     }
 
 
-    getProfileFollowsByIds = async (token: string, userIds: number[]): Promise<ProfileResponse[] | Error> => {
+    getProfileFollowsByIds = async (token: string, userIds: number[]): Promise<ProfileResponse[] | ProfileError | Error> => {
 
         const requestOptions = {
             method: 'GET',
@@ -50,7 +50,7 @@ export class ProfileService implements IProfileService {
 
         return await fetch(API_ROUTES.PROFILE.byIds(userIds), requestOptions)
             .then((res: Response) => res.json())
-            .then((data: ProfileResponse[]) => data)
+            .then((data: ProfileError | ProfileResponse[]) => data)
             .catch((error: Error) => error);
     }
 
@@ -75,7 +75,9 @@ export class ProfileService implements IProfileService {
     mapType = <T extends Object>(
         I: T
     ): ProfileResponseType => { 
-        if ('handle' in I) {
+        if (I.hasOwnProperty('length')) {
+            return 'ProfilesArrayResponse';
+        } else if ('handle' in I) {
             return 'ProfileResponse';
         } else if ('message' in I) {
             return 'ProfileError';

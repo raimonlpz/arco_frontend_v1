@@ -1,6 +1,6 @@
 
 
-export type NFT_TradesByMarketplace = {
+export type NFT_TradesByMarketplaceScheme = {
     total: number;
     page: number;
     page_size: number;

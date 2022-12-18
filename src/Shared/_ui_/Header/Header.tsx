@@ -1,17 +1,17 @@
 import { Navbar, Button, Link, Text, useTheme, Avatar, Popover, Grid, Row, Spacer, Tooltip } from "@nextui-org/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BsChevronBarContract } from 'react-icons/bs';
-import { pages } from "../_utils_/routes";
+import { pages } from "../../_utils_/routes";
 import { useEffect, useState } from "react";
-import { useAuthStore } from "../../Auth/_store_/auth";
+import { useAuthStore } from "../../../Auth/_store_/auth";
 
 import { IoMdLogOut } from 'react-icons/io';
 import { BiSearchAlt, BiCategoryAlt } from 'react-icons/bi';
 import { TbActivity } from 'react-icons/tb';
 import { CgProfile } from 'react-icons/cg';
-import { LocalStorage } from "../_services_";
-import { useProfileStore } from "../../Profile/_store_/profile";
-import { DEFAULTS } from "../_utils_/constants";
+import { LocalStorage } from "../../_services_";
+import { useProfileStore } from "../../../Profile/_store_/profile";
+import { DEFAULTS } from "../../_utils_/constants";
 
 
 export default function Header() {

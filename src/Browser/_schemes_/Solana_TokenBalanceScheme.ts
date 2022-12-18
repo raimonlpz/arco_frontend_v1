@@ -1,6 +1,6 @@
 
 
-export type SolanaTokenBalanceScheme = {
+export type Solana_TokenBalanceScheme = {
     associatedTokenAddress: string;
     mint: string;
     name: string;

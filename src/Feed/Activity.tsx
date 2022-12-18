@@ -1,4 +1,4 @@
-import { Layout } from "../Shared/Layout/Layout"
+import { Layout } from "../Shared/_ui_/Layout/Layout"
 
 export const ActivityPage = () => {
     return (

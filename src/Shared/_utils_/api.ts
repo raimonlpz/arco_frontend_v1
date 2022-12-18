@@ -22,6 +22,7 @@ export class API_ROUTES {
     static SEARCH = {
         all: `${this.BASE}/search/users`,
         mine: `${this.BASE}/search/users/me`,
-        byUser: (userId: string | number) => `${this.BASE}/search/users/${userId}`
+        byUser: (userId: string | number) => `${this.BASE}/search/users/${userId}`,
+        raw: `${this.BASE}/search/raw`
     }
 }

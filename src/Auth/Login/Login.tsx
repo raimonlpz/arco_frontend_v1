@@ -1,4 +1,4 @@
-import { Layout } from "../../Shared/Layout/Layout"
+import { Layout } from "../../Shared/_ui_/Layout/Layout"
 import { FaUserNinja } from "react-icons/fa";
 import { Button, Grid, Input, Modal, Spacer, Text } from "@nextui-org/react";
 import { useEffect, useState } from "react";

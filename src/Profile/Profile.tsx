@@ -1,8 +1,8 @@
 import { Avatar, Button, Grid, Input, Modal, Spacer, Text, Textarea, useModal } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAuthStore } from "../Auth/_store_/auth"
-import { Layout } from "../Shared/Layout/Layout"
+import { useAuthStore } from "../Auth/_store_/auth";
+import { Layout } from "../Shared/_ui_/Layout/Layout";
 import { useProfileStore } from "./_store_/profile";
 
 import { HiUsers } from 'react-icons/hi';

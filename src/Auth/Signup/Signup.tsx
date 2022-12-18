@@ -1,7 +1,7 @@
 import { Button, Grid, Input, Modal, Spacer, Text } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
-import { Layout } from "../../Shared/Layout/Layout"
+import { Layout } from "../../Shared/_ui_/Layout/Layout"
 import { FaUserAstronaut } from "react-icons/fa";
 import { pages } from "../../Shared/_utils_/routes";
 import { AuthService } from "../_services_";

@@ -1,15 +1,32 @@
-import { Table, Text } from "@nextui-org/react";
+import { Table, Text, Tooltip } from "@nextui-org/react";
 import { Token_TransactionsByContractScheme } from "../../_schemes_/Token_TransactionsByContractScheme";
+import { Token_TransactionsByWalletScheme } from "../../_schemes_/Token_TransactionsByWalletScheme";
+import { Transaction_TransactionsByWalletScheme } from "../../_schemes_/Transaction_TransactionsByWalletScheme";
+
+type TokenTransactionsUI =
+    | Token_TransactionsByContractScheme 
+    | Token_TransactionsByWalletScheme
+    | Transaction_TransactionsByWalletScheme;
+
 
 export default function TokenTransactions(
-    transactions: Token_TransactionsByContractScheme
+    transactions: TokenTransactionsUI
 ) { 
-    type T = Token_TransactionsByContractScheme["result"][0];
+    type T = TokenTransactionsUI["result"][0];
 
     const columns = Object.keys(transactions.result[0] ?? []).map(key => ({
         name: key.replaceAll('_', ' '),
         uid: key
     }));
+
+
+    const getColor = (columnKey: string) => {
+        return  columnKey === 'from_address' ? 'success' : 
+            columnKey === 'to_address' ? 'warning' : 
+            columnKey === 'block_timestamp' ? 'secondary' :
+            columnKey === 'hash' ? 'error' :
+            '';
+    }
 
 
     return (
@@ -27,19 +44,27 @@ export default function TokenTransactions(
                 {(column) => (
                     <Table.Column
                         key={column.uid}
-                        hideHeader={column.uid === "actions"}
-                        align={column.uid === "actions" ? "center" : "start"}
                     >
                         {column.name}
                     </Table.Column>
                 )}
             </Table.Header>
-            <Table.Body items={transactions.result} css={{ zIndex: "1" }}>
+            <Table.Body items={transactions.result as any} css={{ zIndex: "1" }}>
                  {(item: T) => (
-                        <Table.Row key={item.transaction_index + 'row'}>
+                        <Table.Row key={item.transaction_index.toString() + Date.now()}>
                             {(columnKey) => (
-                                <Table.Cell key={item.transaction_index + 'cell'} css={{ maxW: "100px", minW: "50px" }}>
-                                    <Text size={13}>{item[columnKey as keyof T] ?? '-'}</Text>
+                                <Table.Cell key={item.transaction_index + columnKey.toString()} css={{ maxW: "100px", minW: "50px", paddingLeft: '.2rem', paddingRight: '.2rem' }}>
+                                    <Tooltip 
+                                        content={item[columnKey as keyof T] ?? '-'} 
+                                        contentColor={getColor(columnKey.toString()) as any}>
+                                            <Text 
+                                                size={13}
+                                                color={getColor(columnKey.toString())}
+                                                css={{ fontWeight: columnKey === 'hash' ? 'bold' : '' }}
+                                            >
+                                                {item[columnKey as keyof T] ?? '-'}
+                                            </Text>
+                                    </Tooltip>
                                 </Table.Cell>
                             )}
                         </Table.Row>
@@ -50,7 +75,7 @@ export default function TokenTransactions(
                 noMargin
                 align="center"
                 rowsPerPage={20}
-                onPageChange={(page) => console.log({ page })}
+                onPageChange={(page) => {}}
                 color="warning"
             ></Table.Pagination>
         </Table>

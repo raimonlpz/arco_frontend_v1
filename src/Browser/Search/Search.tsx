@@ -9,7 +9,7 @@ import { SearchService } from "./_services_";
 import { useAuthStore } from "../../Auth/_store_/auth";
 import LoadingSpinner from "../../Shared/_ui_/Loading/Loading";
 import { SearchQueryResponse } from "./_models_";
-import Results from "../Results/Results";
+import Resolver from "../Results/Resolver";
 
 
 export const SearchPage = () => {
@@ -53,10 +53,16 @@ export const SearchPage = () => {
     return (
         <Layout>
             {
-                results ? (
-                    <Results results={results} />
-                ) : 
-                <Grid css={{display: "flex", flexDirection: "column", alignItems: "center", marginTop: "4rem"}}>
+                results 
+                ? (<Resolver results={results} />) 
+                : 
+                <Grid css={{
+                    display: "flex", 
+                    flexDirection: "column", 
+                    alignItems: "center", 
+                    marginTop: "4rem", 
+                    visibility: `${loading ? "hidden" : "visible"}`
+                }}>
                     <BsChevronBarContract size="140" />
                     <Input 
                         css={{

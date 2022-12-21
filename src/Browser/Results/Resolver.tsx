@@ -1,11 +1,13 @@
 import { Text } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { SearchQueryResponse } from "../Search/_models_";
+import { NFT_NFTsByContractScheme } from "../_schemes_/NFT_NFTsByContractScheme";
 import { Token_MetadataByContractScheme } from "../_schemes_/Token_MetadataByContractScheme";
 import { Token_MetadataBySymbolsScheme } from "../_schemes_/Token_MetadataBySymbolsScheme";
 import { Token_TransactionsByContractScheme } from "../_schemes_/Token_TransactionsByContractScheme";
 import { Token_TransactionsByWalletScheme } from "../_schemes_/Token_TransactionsByWalletScheme";
 import { Transaction_TransactionsByWalletScheme } from "../_schemes_/Transaction_TransactionsByWalletScheme";
+import NFTsCollection from "./_tables_/NFTsCollection";
 import TokenMetadata from "./_tables_/TokenMetadata";
 import TokenTransactions from "./_tables_/TokenTransactions";
 
@@ -19,6 +21,14 @@ export default function Resolver(
     useEffect(() => {
 
         switch (results.action.name) {
+
+            case 'NFT_get_nfts_by_contract':
+                if ((results.data as NFT_NFTsByContractScheme).result.length > 0)
+                    setTableScheme(NFTsCollection(
+                        (results.data as
+                           | NFT_NFTsByContractScheme)
+                    ));
+                break;
 
             case 'TOKEN_get_transactions_by_contract':
             case 'TOKEN_get_transactions_by_wallet':
@@ -51,6 +61,6 @@ export default function Resolver(
             marginTop: "15%",
             transform: "translateY(-15%)"
         }}>
-            No Results
+            0 Results
         </Text>
 }

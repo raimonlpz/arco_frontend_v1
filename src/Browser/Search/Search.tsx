@@ -43,7 +43,6 @@ export const SearchPage = () => {
                         // TO-DO: handle error in UI
                         break;
                 }
-                // console.log(res)
                 setLoading(false)
             })
         }   

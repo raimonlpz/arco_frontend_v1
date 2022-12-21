@@ -3,7 +3,17 @@
 <img width="1435" alt="Captura de pantalla 2022-12-10 a las 21 54 57" src="https://user-images.githubusercontent.com/59086203/206874898-f186583b-73cc-475d-8be5-d1ab99f17346.png">
 
 
-<img width="1433" alt="Captura de pantalla 2022-12-20 a las 1 24 04" src="https://user-images.githubusercontent.com/59086203/208554391-891275de-46d6-4257-8524-b9fccd3cde30.png">
+
+<img width="1429" alt="Captura de pantalla 2022-12-21 a las 2 21 28" src="https://user-images.githubusercontent.com/59086203/208798348-c6a95d00-fb28-4621-8192-b5fe9564fd48.png">
+
+
+
+<img width="1434" alt="Captura de pantalla 2022-12-21 a las 2 18 38" src="https://user-images.githubusercontent.com/59086203/208798360-64f01cb4-2f31-4e72-afed-df6ffe4ccdfc.png">
+
+
+
+<img width="1437" alt="Captura de pantalla 2022-12-21 a las 2 18 14" src="https://user-images.githubusercontent.com/59086203/208798373-123a41fa-1b25-42f0-adaf-55114dd4fe92.png">
+
 
 
 

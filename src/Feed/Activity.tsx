@@ -34,7 +34,6 @@ export const ActivityPage = () => {
                 case 'SearchResponse':
                     setAllSearches((res as 
                         (SearchResponse & { profile: ProfileResponse })[]).reverse());
-                        console.log(res);
                     break;
                 case 'SearchError':
                 case 'Error':

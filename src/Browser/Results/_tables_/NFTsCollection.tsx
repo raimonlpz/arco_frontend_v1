@@ -1,8 +1,10 @@
 import { Avatar, Table, Text, Tooltip } from "@nextui-org/react";
 import { NFT_NFTsByContractScheme } from "../../_schemes_/NFT_NFTsByContractScheme"
+import { NFT_NFTsByWalletScheme } from "../../_schemes_/NFT_NFTsByWalletScheme";
 
 type NFTsCollectionUI = 
-    | NFT_NFTsByContractScheme;
+    | NFT_NFTsByContractScheme
+    | NFT_NFTsByWalletScheme;
 
 export default function NFTsCollection(
     nfts: NFTsCollectionUI

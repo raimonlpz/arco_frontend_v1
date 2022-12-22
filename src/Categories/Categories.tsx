@@ -1,4 +1,4 @@
-import { Button, Card, Col, Grid, Row, Text } from "@nextui-org/react"
+import { Button, Card, Grid, Row, Text } from "@nextui-org/react"
 import { Layout } from "../Shared/_ui_/Layout/Layout"
 
 

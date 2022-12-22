@@ -187,23 +187,33 @@ export const ProfilePage = () => {
                         <Grid css={{marginTop: "3rem", zIndex:"1"}}>  
                             <Button.Group size="md" vertical color="gradient" bordered >
                                 <Button onClick={getMySearches}>
-                                    <FaSearchDollar size="20" />
-                                    <Spacer x={.4} />
-                                    Search Historial
+                                    <FaSearchDollar size="25" style={{paddingTop: '.25rem'}} />
+                                    <Spacer x={.6} />
+                                    <Text h4 css={{paddingTop: '1rem'}}>
+                                        Search Historial
+                                    </Text>
                                 </Button>
                                 <Spacer />
                                 <Spacer />
                                 <Button>
-                                    <SiSubstack size="20" />
+                                    <SiSubstack size="25" style={{paddingTop: '.25rem'}} />
                                     <Spacer x={.4} />
-                                    Subscriptions
+                                    <Text h4 css={{paddingTop: '1rem'}}>
+                                        Subscriptions
+                                    </Text>
                                 </Button>
                                 <Spacer />
                                 <Spacer />
                                 <Button>
-                                    <MdFavorite size="20" color="white" />
+                                    <MdFavorite 
+                                        size="30" 
+                                        style={{paddingTop: '.25rem', paddingBottom: '.25rem'}} 
+                                        color="white" 
+                                    />
                                     <Spacer x={.4} />
-                                    Favorites
+                                    <Text h4 css={{paddingTop: '1rem', paddingBottom: '.5rem'}}>
+                                        Favorites
+                                    </Text>
                                 </Button>
                             </Button.Group>
                         </Grid>
@@ -326,7 +336,7 @@ export const ProfilePage = () => {
                                     <b style={{margin: '.25rem', fontSize: "2rem"}}> 
                                         {profile.followedBy?.length ?? 0}
                                     </b> 
-                                    <i>Followers</i> 
+                                    <i style={{fontSize: '1.05rem'}}>Followers</i> 
                                 </Button>
                                 <Spacer />
                                 <Spacer />
@@ -337,7 +347,7 @@ export const ProfilePage = () => {
                                     <b style={{margin: '.25rem', fontSize: "2rem"}}> 
                                         {profile.following?.length ?? 0}
                                     </b> 
-                                    <i>Following</i>
+                                    <i style={{fontSize: '1.05rem'}}>Following</i>
                                 </Button>
                             </Button.Group>
                         </Grid>

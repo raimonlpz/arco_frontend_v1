@@ -14,7 +14,7 @@ import { capitalizeFirstLetter } from "../Shared/_utils_/functions";
 
 export const ActivityPage = () => {
 
-    const [allSearches, setAllSearches] = useState<(SearchResponse & { profile: ProfileResponse })[]>([]);
+    const [allSearches, setAllSearches] = useState<(SearchResponse & { profile: ProfileResponse })[]>();
 
     const [
         session,
@@ -32,13 +32,14 @@ export const ActivityPage = () => {
             const I = searchService.mapType(res);
             switch (I) {
                 case 'SearchResponse':
-                        setAllSearches((res as 
-                                (SearchResponse & { profile: ProfileResponse })[]).reverse());
-                        break;
-                    case 'SearchError':
-                    case 'Error':
-                        // handle Error
-                        break;
+                    setAllSearches((res as 
+                        (SearchResponse & { profile: ProfileResponse })[]).reverse());
+                        console.log(res);
+                    break;
+                case 'SearchError':
+                case 'Error':
+                    // handle Error
+                    break;
             }
             setLoading(false);
         }
@@ -53,7 +54,7 @@ export const ActivityPage = () => {
 
     return (
         <Layout>
-            { allSearches && (
+            { allSearches && !loading && (
                 <Grid.Container gap={2} justify="center" css={{padding: "2.5rem"}}>
                         <Grid xs={4} style={{display: "flex", flexDirection: "row", justifyContent: "center" }}>
                             <Text h1>Last Searches</Text>
@@ -74,18 +75,20 @@ export const ActivityPage = () => {
                             }, }}>
                                 {capitalizeFirstLetter(search.intents[0].value)}
                                 <span style={{fontWeight: "bold", color:"greenyellow", display: "block", fontSize: "11.5px"}}>
-                                    {moment(search.createdAt).format('MMMM Do YYYY, h:mm:ss').toString()}
+                                    {moment(search.createdAt).format('MMMM Do YYYY, h:mm:ss').toString()} | <span style={{color: 'cyan', fontSize: 14}}> @{search.profile.handle}</span>
                                 </span>
                                 <SiSubstack size={18} />
                                 &nbsp;&nbsp;&nbsp;
-                                <MdFavorite size={18} /> 
+                                <MdFavorite size={18} />                              
                             </Text>
                         </Grid>
                     )
                 ))}
                 </Grid.Container>
             )}
-            <LoadingSpinner loading={loading} />
+            <div style={{height: '80vh'}}>
+                <LoadingSpinner loading={loading} />
+            </div>
         </Layout>
     )
 }

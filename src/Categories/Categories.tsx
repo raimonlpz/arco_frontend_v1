@@ -45,7 +45,7 @@ export const CategoriesPage = () => {
     
                 { categories.map(category => (
                     <Grid xs={3} style={{display: "flex", flexDirection: "row", justifyContent: "center" }} key={category.id}>
-                        <Card variant="bordered" css={{width: '200px', height: '200px'}}>
+                        <Card variant="bordered" css={{width: '200px', height: '200px'}} isPressable>
                             <Card.Body>
                                 <Card.Image
                                     src="https://static.vecteezy.com/system/resources/previews/002/525/469/non_2x/lines-in-modern-style-line-art-minimalist-print-pattern-geometric-style-black-and-white-illustration-vector.jpg"

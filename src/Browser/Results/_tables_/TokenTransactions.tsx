@@ -9,8 +9,8 @@ type TokenTransactionsUI =
     | Transaction_TransactionsByWalletScheme;
 
 
-export default function TokenTransactions(
-    transactions: TokenTransactionsUI
+export default function TokenTransactions( 
+    {transactions}: { transactions: TokenTransactionsUI }
 ) { 
     type T = TokenTransactionsUI["result"][0];
 

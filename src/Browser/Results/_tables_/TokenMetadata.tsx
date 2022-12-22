@@ -8,7 +8,7 @@ type TokenMetadataUI =
     | Token_MetadataByContractScheme
 
 export default function TokenMetadata(
-    metadata: TokenMetadataUI
+    { metadata }: { metadata: TokenMetadataUI }
 ) {
 
     type T = TokenMetadataUI[0];

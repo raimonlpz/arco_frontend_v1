@@ -67,8 +67,6 @@ export const ProfilePage = () => {
         if (!session && dataLoaded) navigate('/search')
         if (params.id) {
 
-            console.log(params.id)
-
             // call to get User by ID (params.id)
 
         } else {

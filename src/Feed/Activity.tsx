@@ -8,6 +8,7 @@ import { SearchResponse } from "../Browser/Search/_models_";
 import { SearchService } from "../Browser/Search/_services_";
 import { ProfileResponse } from "../Profile/_models_";
 import { Layout } from "../Shared/_ui_/Layout/Layout"
+import LoadingSpinner from "../Shared/_ui_/Loading/Loading";
 import { DEFAULTS } from "../Shared/_utils_/constants";
 import { capitalizeFirstLetter } from "../Shared/_utils_/functions";
 
@@ -21,8 +22,11 @@ export const ActivityPage = () => {
         state.access_token
     ]);
 
+    const [loading, setLoading] = useState(false);
+
     const getSearches = useCallback((async () => {
         if (session) {
+            setLoading(true);
             const searchService = new SearchService();
             const res = await searchService.getAllSearches(session!);
             const I = searchService.mapType(res);
@@ -36,6 +40,7 @@ export const ActivityPage = () => {
                         // handle Error
                         break;
             }
+            setLoading(false);
         }
     }), [session]);
 
@@ -80,6 +85,7 @@ export const ActivityPage = () => {
                 ))}
                 </Grid.Container>
             )}
+            <LoadingSpinner loading={loading} />
         </Layout>
     )
 }

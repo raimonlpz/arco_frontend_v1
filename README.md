@@ -6,6 +6,10 @@
 <img width="1437" alt="Captura de pantalla 2022-12-22 a las 22 41 58" src="https://user-images.githubusercontent.com/59086203/209231191-48d3b252-a3da-4717-b98c-830950adacdb.png">
 
 
+<img width="1433" alt="Captura de pantalla 2022-12-22 a las 23 42 57" src="https://user-images.githubusercontent.com/59086203/209237846-81fc13b6-56ff-4a37-bd35-76102489f11a.png">
+
+
+
 
 <img width="1429" alt="Captura de pantalla 2022-12-21 a las 2 21 28" src="https://user-images.githubusercontent.com/59086203/208798348-c6a95d00-fb28-4621-8192-b5fe9564fd48.png">
 

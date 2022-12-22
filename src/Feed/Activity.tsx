@@ -75,7 +75,7 @@ export const ActivityPage = () => {
                             }, }}>
                                 {capitalizeFirstLetter(search.intents[0].value)}
                                 <span style={{fontWeight: "bold", color:"greenyellow", display: "block", fontSize: "11.5px"}}>
-                                    {moment(search.createdAt).format('MMMM Do YYYY, h:mm:ss').toString()} | <span style={{color: 'cyan', fontSize: 14}}> @{search.profile.handle}</span>
+                                    {moment(search.createdAt).format('MMMM Do YYYY, h:mm:ss').toString()} | <span style={{color: 'cyan', fontSize: 14}}> @{search.profile.handle ?? 'unknown'}</span>
                                 </span>
                                 <SiSubstack size={18} />
                                 &nbsp;&nbsp;&nbsp;

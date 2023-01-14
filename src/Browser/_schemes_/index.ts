@@ -10,19 +10,19 @@ import './Defi_PairReservesScheme';
 import './Event_EventsByContractScheme';
 import './Event_LogsByContractScheme';
 
-import './NFT_CollectionMetadataScheme';
-import './NFT_CollectionsByWalletScheme';
+import './NFT_CollectionMetadataScheme';  // X
+import './NFT_CollectionsByWalletScheme'; // X
 import './NFT_LowestPriceScheme';
 import './NFT_NFTMetadataScheme';
-import './NFT_NFTsByContractScheme';
-import './NFT_NFTsByWalletScheme';
-import './NFT_OwnersByContractScheme';
-import './NFT_OwnersByTokenIdScheme';
+import './NFT_NFTsByContractScheme'; // X
+import './NFT_NFTsByWalletScheme';  // X
+import './NFT_OwnersByContractScheme'; // X
+import './NFT_OwnersByTokenIdScheme'; // X
 import './NFT_TradesByMarketplaceScheme';
-import './NFT_TransfersByBlockScheme';
-import './NFT_TransfersByContractScheme';
-import './NFT_TransfersByWalletScheme';
-import './NFT_TransfersFromBlockToBlockScheme';
+import './NFT_TransfersByBlockScheme'; // X
+import './NFT_TransfersByContractScheme'; // X
+import './NFT_TransfersByWalletScheme'; // X
+import './NFT_TransfersFromBlockToBlockScheme'; // X
 import './NFT_SearchNFTsScheme';
 
 import './Resolver_ResolveENSNameScheme';
@@ -35,15 +35,15 @@ import './Solana_PortfolioScheme';
 import './Solana_TokenBalanceScheme';
 import './Solana_TokenPriceScheme';
 
-import './Token_BalanceByWalletScheme';
-import './Token_MetadataByContractScheme';
-import './Token_MetadataBySymbolsScheme';
-import './Token_PriceScheme';
+import './Token_BalanceByWalletScheme'; // X
+import './Token_MetadataByContractScheme'; // x
+import './Token_MetadataBySymbolsScheme'; // X
+import './Token_PriceScheme'; // X
 import './Token_SpenderAllowanceScheme';
-import './Token_TransactionsByContractScheme';
-import './Token_TransactionsByWalletScheme';
+import './Token_TransactionsByContractScheme'; // X
+import './Token_TransactionsByWalletScheme'; // X
 
-import './Transaction_TransactionByHashScheme';
-import './Transaction_TransactionsByWalletScheme';
+import './Transaction_TransactionByHashScheme'; // X
+import './Transaction_TransactionsByWalletScheme'; // X
 
 

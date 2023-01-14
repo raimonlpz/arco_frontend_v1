@@ -60,27 +60,27 @@ export const ActivityPage = () => {
                         </Grid>
                         {allSearches.map(search => (
                             search.intents[0] && (
-                            <Grid xs={4} style={{display: "flex", flexDirection: "row" }} key={search.id}>
-                            <Avatar 
-                                css={{ size: "$10" }}
-                                src={search.profile.avatarUrl ?? DEFAULTS.avatar}
-                                color="gradient"
-                                bordered
-                            />
-                            <Spacer />
-                            <Text size="$md" onClick={() => console.log(search.query, search.id)} css={{ '&:hover': {
-                                color: '$pink800',
-                                cursor: "pointer"
-                            }, }}>
-                                {capitalizeFirstLetter(search.intents[0].value)}
-                                <span style={{fontWeight: "bold", color:"greenyellow", display: "block", fontSize: "11.5px"}}>
-                                    {moment(search.createdAt).format('MMMM Do YYYY, h:mm:ss').toString()} | <span style={{color: 'cyan', fontSize: 14}}> @{search.profile.handle ?? 'unknown'}</span>
-                                </span>
-                                <SiSubstack size={18} />
-                                &nbsp;&nbsp;&nbsp;
-                                <MdFavorite size={18} />                              
-                            </Text>
-                        </Grid>
+                            <Grid xs={4} style={{display: "flex", flexDirection: "row", maxWidth: "33vw", overflow: 'hidden' }} key={search.id}>
+                                <Avatar 
+                                    css={{ size: "$10" }}
+                                    src={search.profile.avatarUrl ?? DEFAULTS.avatar}
+                                    color="gradient"
+                                    bordered
+                                />
+                                <Spacer />
+                                <Text size="$md" onClick={() => console.log(search.query, search.id)} css={{ '&:hover': {
+                                    color: '$pink800',
+                                    cursor: "pointer"
+                                }, }}>
+                                    {capitalizeFirstLetter(search.intents[0].value)}
+                                    <span style={{fontWeight: "bold", color:"greenyellow", display: "block", fontSize: "11.5px"}}>
+                                        {moment(search.createdAt).format('MMMM Do YYYY, h:mm:ss').toString()} | <span style={{color: 'cyan', fontSize: 14}}> @{search.profile.handle ?? 'unknown'}</span>
+                                    </span>
+                                    <SiSubstack size={18} />
+                                    &nbsp;&nbsp;&nbsp;
+                                    <MdFavorite size={18} />                              
+                                </Text>
+                            </Grid>
                     )
                 ))}
                 </Grid.Container>

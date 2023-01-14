@@ -7,5 +7,8 @@ export enum SchemeUI {
     NFTCollectionMetadataUI,
     TokenTransactionsUI,
     TokenMetadataUI,
-    TokenBalancesUI
+    TokenBalancesUI,
+    TokenPriceUI,
+    TransactionByHashUI,
+    BlockByHashUI
 }

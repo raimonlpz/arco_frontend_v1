@@ -21,7 +21,7 @@ export default function TokenTransactions(
 
 
     const getColor = (columnKey: string) => {
-        return  columnKey === 'from_address' ? 'success' : 
+        return columnKey === 'from_address' ? 'success' : 
             columnKey === 'to_address' ? 'warning' : 
             columnKey === 'block_timestamp' ? 'secondary' :
             columnKey === 'hash' ? 'error' :

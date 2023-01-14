@@ -6,6 +6,10 @@ import { NFT_CollectionMetadataScheme } from "../_schemes_/NFT_CollectionMetadat
 import { NFT_CollectionsByWalletScheme } from "../_schemes_/NFT_CollectionsByWalletScheme";
 import { NFT_NFTsByContractScheme } from "../_schemes_/NFT_NFTsByContractScheme";
 import { NFT_NFTsByWalletScheme } from "../_schemes_/NFT_NFTsByWalletScheme";
+import { NFT_TransfersByBlockScheme } from "../_schemes_/NFT_TransfersByBlockScheme";
+import { NFT_TransfersByContractScheme } from "../_schemes_/NFT_TransfersByContractScheme";
+import { NFT_TransfersByWalletScheme } from "../_schemes_/NFT_TransfersByWalletScheme";
+import { NFT_TransfersFromBlockToBlockScheme } from "../_schemes_/NFT_TransfersFromBlockToBlockScheme";
 import { Token_BalanceByWalletScheme } from "../_schemes_/Token_BalanceByWalletScheme";
 import { Token_MetadataByContractScheme } from "../_schemes_/Token_MetadataByContractScheme";
 import { Token_MetadataBySymbolsScheme } from "../_schemes_/Token_MetadataBySymbolsScheme";
@@ -14,7 +18,9 @@ import { Token_TransactionsByWalletScheme } from "../_schemes_/Token_Transaction
 import { Transaction_TransactionsByWalletScheme } from "../_schemes_/Transaction_TransactionsByWalletScheme";
 import { SchemeUI } from "./_models_";
 import NFTCollectionMetadata from "./_tables_/NFTCollectionMetadata";
+import NFTCollectionsInWallet from "./_tables_/NFTCollectionsInWallet";
 import NFTsCollection from "./_tables_/NFTsCollection";
+import NFTsTransfers from "./_tables_/NFTsTransfers";
 import TokenBalances from "./_tables_/TokenBalances";
 import TokenMetadata from "./_tables_/TokenMetadata";
 import TokenTransactions from "./_tables_/TokenTransactions";
@@ -56,6 +62,16 @@ export default function Resolver(
                 }
                 break;
 
+            case 'NFT_get_transfers_by_block':
+            case 'NFT_get_transfers_by_wallet':
+            case 'NFT_get_transfers_by_contract':
+            case 'NFT_get_transfers_from_block_to_block':
+                if ((results.data as NFT_TransfersByBlockScheme).result.length > 0) {
+                    setScheme(SchemeUI.NFTSTransfersUI)
+                    setParams(results.data)
+                }
+                break;
+
             case 'TOKEN_get_balance_by_wallet':
                 if ((results.data as Token_BalanceByWalletScheme).length > 0) {
                     setScheme(SchemeUI.TokenBalancesUI)
@@ -84,7 +100,7 @@ export default function Resolver(
     }, [results])
 
 
-    if (scheme) {
+    if (typeof scheme === 'number') {
 
         if (scheme === SchemeUI.TokenTransactionsUI) {
             return <TokenTransactions transactions={params! as 
@@ -120,9 +136,19 @@ export default function Resolver(
             }/>
         }
 
-
         if (scheme === SchemeUI.NFTCollectionsByWalletUI) {
-            return <></>
+            return <NFTCollectionsInWallet collections={params! as 
+                | NFT_CollectionsByWalletScheme
+            }/>
+        }
+
+        if (scheme === SchemeUI.NFTSTransfersUI) {
+            return <NFTsTransfers transfers={params! as 
+                | NFT_TransfersByBlockScheme 
+                | NFT_TransfersByContractScheme
+                | NFT_TransfersByWalletScheme
+                | NFT_TransfersFromBlockToBlockScheme
+            }/>
         }
     }
     

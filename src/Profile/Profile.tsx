@@ -354,9 +354,11 @@ export const ProfilePage = () => {
     const handleSearchProfile = (userId: number) => {
         if (session_id !== userId) {
 
-            // Reset
+            // Reset values
             setFollowers([])
             setFollowing([])
+            setProfileIsFollowed(false)
+            setIsMyProfile(false)
             setOtherProfile(undefined);
             setModalFollowers(false);
             setModalFollowing(false);

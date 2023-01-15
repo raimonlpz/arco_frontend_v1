@@ -1,4 +1,5 @@
-import { Avatar, Button, Grid, Input, Modal, Spacer, Text, Textarea, useModal } from "@nextui-org/react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Avatar, Button, Divider, Grid, Input, Modal, Spacer, Text, Textarea, useModal } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuthStore } from "../Auth/_store_/auth";
@@ -8,8 +9,12 @@ import { useProfileStore } from "./_store_/profile";
 import { HiUsers } from 'react-icons/hi';
 import { FaSearchDollar } from 'react-icons/fa';
 import { SiSubstack } from 'react-icons/si';
-import { MdFavorite } from 'react-icons/md';
+import { MdFavorite, MdWork } from 'react-icons/md';
 import { FaUserAstronaut } from 'react-icons/fa';
+import { VscSymbolNamespace } from 'react-icons/vsc';
+import { RiDoubleQuotesR } from 'react-icons/ri';
+import { SlUserFollow, SlUserUnfollow } from 'react-icons/sl';
+import { FaWallet } from 'react-icons/fa';
 import { ProfileService } from "./_services_";
 import { ProfileResponse } from "./_models_";
 import { SearchService } from "../Browser/Search/_services_";
@@ -17,10 +22,13 @@ import { SearchResponse } from "../Browser/Search/_models_";
 import { capitalizeFirstLetter } from "../Shared/_utils_/functions";
 import moment from "moment";
 import { DEFAULTS } from "../Shared/_utils_/constants";
+import { useSearchStore } from "../Browser/Search/_store_/search";
+import LoadingSpinner from "../Shared/_ui_/Loading/Loading";
 
 export const ProfilePage = () => {
     const params = useParams();
     const navigate = useNavigate();
+
     const [isMyProfile, setIsMyProfile] = useState(false);
 
     const [mySearches, setMySearches] = useState<SearchResponse[]>([]);
@@ -31,6 +39,12 @@ export const ProfilePage = () => {
 
     const [following, setFollowing] = useState<ProfileResponse[]>([]);
     const { setVisible: setModalFollowing, bindings: bindingsModalFollowing } = useModal();
+
+    const [otherProfile, setOtherProfile] = useState<ProfileResponse>();
+    const [profileIsFollowed, setProfileIsFollowed] = useState<boolean>(false);
+
+
+    const [loading, setLoading] = useState(false)
 
 
     /**
@@ -46,10 +60,12 @@ export const ProfilePage = () => {
 
     const [
         session,
+        session_id,
         dataLoaded,
         email
     ] = useAuthStore((state) => [ 
         state.access_token, 
+        state.session_id,
         state.dataLoaded,
         state.session_email,
     ]);
@@ -62,12 +78,43 @@ export const ProfilePage = () => {
         state.setProfile
     ]);
 
+    const [
+        setQuery
+    ] = useSearchStore((state) => [
+        state.setQuery
+    ]);
+
+
+    useEffect(() => {
+        setFollowers([])
+        setFollowing([])
+    }, [isMyProfile])
+
+
+    useEffect(() => {
+        // We check if current User visited is being followed by Us
+        if (otherProfile) {
+            if ((profile?.following?? []).length > 0) {
+                const followingUsers = (profile.following ?? []).map(f => f.followingId)
+                if (followingUsers.includes(otherProfile.id!)) {
+                    setProfileIsFollowed(true);
+                }
+            }
+        }
+    }, [  
+        profile,
+        otherProfile
+    ])
+
 
     useEffect(() => {
         if (!session && dataLoaded) navigate('/search')
         if (params.id) {
 
-            // call to get User by ID (params.id)
+            if (!otherProfile) {
+                // call to get Other User by ID (params.id)
+                fetchOtherProfile();
+            }
 
         } else {
             setIsMyProfile(true)
@@ -86,12 +133,15 @@ export const ProfilePage = () => {
         session,
         dataLoaded,
         profile,
-        navigate
+        otherProfile,
+        setOtherProfile,
+        navigate,
     ]);
 
 
     const patchProfile = async () => {
         const profileService = new ProfileService();
+        setLoading(true);
         profileService.patchMyProfile(session!, {
             bio,
             handle,
@@ -112,81 +162,350 @@ export const ProfilePage = () => {
                 case 'Error':
                     break;
             }
+            setLoading(false);
         })
     }
 
 
-    const getMySearches = async () => {
+    const getHistoricalSearches = async () => {
         const searchService = new SearchService();
-        searchService.getMySearches(session!).then((res) => {
-            const I = searchService.mapType(res);
-            switch (I) {
-                case 'SearchResponse':
-                    setMySearches(res as SearchResponse[]);
-                    setModalSearches(true);
-                    break;
-                case 'SearchError':
-                    break;
-                case 'Error':
-                    break;
-            }
-        })
-    }
-
-
-    const handleShowFollowers = async () => {
-        if (followers.length === 0) {
-            const profileService = new ProfileService();
-            await profileService.getProfileFollowsByIds(
-                session!, 
-                profile.followedBy?.map(follow => follow.followerId) ?? []
-            ).then((res) => {
-                const I = profileService.mapType(res);
+        setLoading(true);
+        if (isMyProfile) {
+            searchService.getMySearches(session!).then((res) => {
+                const I = searchService.mapType(res);
                 switch (I) {
-                    case 'ProfilesArrayResponse':
-                        setFollowers(res as ProfileResponse[]);
+                    case 'SearchResponse':
+                        setMySearches((res as SearchResponse[]).reverse());
+                        setModalSearches(true);
                         break;
-                    case 'ProfileError':
+                    case 'SearchError':
+                        break;
                     case 'Error':
                         break;
                 }
+                setLoading(false);
+            })
+        } else {
+            searchService.getSearchesByUserId(session!, otherProfile?.userId!).then((res) => {
+                const I = searchService.mapType(res);
+                switch (I) {
+                    case 'SearchResponse':
+                        setMySearches((res as SearchResponse[]).reverse());
+                        setModalSearches(true);
+                        break;
+                    case 'SearchError':
+                        break;
+                    case 'Error':
+                        break;
+                }
+                setLoading(false);
             })
         }
+    }
+
+    const fetchOtherProfile = async () => {
+        const profileService = new ProfileService();
+        setLoading(true);
+        profileService.getProfileById(session!, params.id!).then((res) => {
+            const I = profileService.mapType(res);
+            switch (I) {
+                case 'ProfileResponse':
+                    setOtherProfile(res as ProfileResponse);
+                    break;
+                case 'ProfileError':
+                case 'Error':
+                    // TODO: UI helper-modal showing error
+                    break;
+                }
+                setLoading(false);
+        });
+    }
+
+
+    const fetchMyProfileUpdated = async () => {
+        const profileService = new ProfileService(); 
+        setLoading(true);
+        profileService.getMyProfile(session!).then((res) => {
+            const I = profileService.mapType(res);
+            switch (I) {
+                case 'ProfileResponse':
+                    setProfile(res as ProfileResponse);
+                    break;
+                case 'ProfileError':
+                case 'Error':
+                    // TODO: UI helper-modal showing error
+                    break;
+                }
+                setLoading(false);
+        })
+    }
+
+
+    /**
+     ***************************** Followers ****************************
+     */
+
+    const handleShowFollowers = async (_profile: ProfileResponse) => {
+            const profileService = new ProfileService();
+            if (
+                (_profile.followedBy ?? []).length > 0
+            ) {
+                // setLoading(true);
+                await profileService.getProfileFollowsByIds(
+                    session!, 
+                    _profile.followedBy?.map(follow => follow.followerId) ?? []
+                ).then((res) => {
+                    const I = profileService.mapType(res);
+                    switch (I) {
+                        case 'ProfilesArrayResponse':
+                            setFollowers(res as ProfileResponse[]);
+                            break;
+                        case 'ProfileError':
+                        case 'Error':
+                            break;
+                    }
+                    // setLoading(false);
+                })
+            }
         setModalFollowers(true);
     }
 
 
-    const handleShowFollowing = async () => {
-        if (following.length === 0) {
+    /**
+     ****************************** Following *****************************
+     */
+    const handleShowFollowing = async (_profile: ProfileResponse) => {
             const profileService = new ProfileService();
-            await profileService.getProfileFollowsByIds(
-                session!, 
-                profile.following?.map(follow => follow.followingId) ?? []
-            ).then((res) => {
-                const I = profileService.mapType(res);
-                switch (I) {
-                    case 'ProfilesArrayResponse':
-                        setFollowing(res as ProfileResponse[]);
-                        break;
-                    case 'ProfileError':
-                    case 'Error':
-                        break;
-                }
-            })
-        }
+            if (
+                (_profile.following ?? []).length > 0
+            ) {
+                // setLoading(true);
+                await profileService.getProfileFollowsByIds(
+                    session!, 
+                    _profile.following?.map(follow => follow.followingId) ?? []
+                ).then((res) => {
+                    const I = profileService.mapType(res);
+                    switch (I) {
+                        case 'ProfilesArrayResponse':
+                            setFollowing(res as ProfileResponse[]);
+                            break;
+                        case 'ProfileError':
+                        case 'Error':
+                            break;
+                    }
+                    // setLoading(false);
+                })
+            }
         setModalFollowing(true);
     }
 
 
+    const handleFollowUser = async () => {
+        const profileService = new ProfileService();
+        setLoading(true);
+        await profileService.follow(session!, otherProfile?.id!)
+            .then(async (res) => {
+                const I = profileService.mapType(res);
+                switch (I) {
+                    case 'FollowResponse':
+                        await fetchOtherProfile();
+                        await fetchMyProfileUpdated();
+                        setProfileIsFollowed(true);
+                        break;
+                    case 'ProfileError':
+                    case 'Error':
+                        // Handle error
+                        break;
+                } 
+                setLoading(false);
+            })
+    }
+
+
+    const handleUnfollowUser = async () => {
+        const profileService = new ProfileService();
+        setLoading(true);
+        await profileService.unfollow(session!, otherProfile?.id!)
+            .then(async (res) => {
+                const I = profileService.mapType(res);
+                switch (I) {
+                    case 'FollowResponse':
+                        await fetchOtherProfile();
+                        await fetchMyProfileUpdated();
+                        setProfileIsFollowed(false);
+                        break;
+                    case 'ProfileError':
+                    case 'Error':
+                        // Handle error
+                        break;
+                } 
+                setLoading(false);
+            })
+    }
+
+
+    const handleSearchHistoricQuery = (query: string) => {
+        setQuery(query);
+        navigate('/search')
+    }
+
+
+
+    const handleSearchProfile = (userId: number) => {
+        if (session_id !== userId) {
+
+            // Reset
+            setFollowers([])
+            setFollowing([])
+            setOtherProfile(undefined);
+            setModalFollowers(false);
+            setModalFollowing(false);
+
+            navigate(`/profile/${userId}`)
+        }
+    }
+
+
+
+    if (loading) {
+        return (
+            <div style={{height: '80vh'}}>
+                <LoadingSpinner loading={loading} />
+            </div>
+        )
+    }
+
     return (
         <Layout>
-            { isMyProfile && (
+            
+            {
+                // OTHER PROFILE
+                !isMyProfile && (
+                    <>
+                        <Grid.Container gap={2} css={{justifyContent: "space-evenly"}}>
+
+                            <Grid css={{ marginTop: "3rem", zIndex: "1" }}>
+                                <Button.Group size="md" vertical color="gradient" bordered >
+                                    <Button onClick={getHistoricalSearches}>
+                                        <FaSearchDollar size="25" style={{paddingTop: '.25rem'}} />
+                                        <Spacer x={.6} />
+                                        <Text h5 css={{paddingTop: '1rem'}}>
+                                            Search Historial
+                                        </Text>
+                                    </Button>
+                                    <Spacer />
+                                    <Spacer />
+                                    <Button>
+                                        <SiSubstack size="25" style={{paddingTop: '.25rem'}} />
+                                        <Spacer x={.4} />
+                                        <Text h5 css={{paddingTop: '1rem'}}>
+                                            Subscriptions
+                                        </Text>
+                                    </Button>
+                                </Button.Group>
+                            </Grid>
+
+
+                            <Grid>
+                                <Spacer />
+                                <Avatar 
+                                    css={{ size: "$20", marginLeft: "50%", transform: "translateX(-50%)" }}
+                                    src={otherProfile?.avatarUrl ?? DEFAULTS.avatar}
+                                    color="gradient"
+                                    bordered
+                                    squared
+                                />
+                                   <Button 
+                                        size="sm" 
+                                        bordered
+                                        shadow 
+                                        color="gradient" 
+                                        css={{marginBottom: "1rem", marginTop: "1rem", marginLeft: "50%", transform: "translateX(-50%)"}}
+                                        onClick={profileIsFollowed ? handleUnfollowUser : handleFollowUser}
+                                    >
+                                        {
+                                            profileIsFollowed 
+                                                ? (
+                                                    <>
+                                                        <SlUserUnfollow size="20" /> 
+                                                        <i style={{fontSize: '1rem'}}> Unfollow</i> 
+                                                    </>
+                                                )
+                                                : (
+                                                    <>
+                                                        <SlUserFollow size="20" />  
+                                                        <i style={{fontSize: '1rem'}}> Follow</i> 
+                                                    </>
+                                                )
+                                        }
+                                    </Button>
+                                <Divider />
+                                <Text size="$md" css={{ justifyContent: "center", marginTop: "1rem"}}>
+                                    <FaUserAstronaut size="20" style={{marginRight: ".25rem"}} />
+                                    @{otherProfile?.handle ?? 'unknown'}
+                                </Text>
+                                <Divider />
+                                <Text size="$md" css={{ justifyContent: "center", marginTop: "1rem"}}>
+                                   <VscSymbolNamespace size="20" style={{marginRight: ".5rem"}} />
+                                    {otherProfile?.firstName ?? '-'} {otherProfile?.lastName} 
+                                </Text>
+                                <Divider />
+                                <Text size="$md" css={{ justifyContent: "center", marginTop: "1rem"}}>
+                                    <MdWork size="20" style={{marginRight: ".5rem"}} />  
+                                    {otherProfile?.profession ?? '-'}
+                                </Text>
+                                <Divider />
+                                <Text size="$md" css={{ justifyContent: "center", marginTop: "1rem"}}>
+                                    <RiDoubleQuotesR size="20" style={{marginRight: ".5rem"}} />
+                                    {otherProfile?.bio ?? '-'}
+                                </Text>
+                                <Divider />
+                                <Text size="$md" css={{ justifyContent: "center", marginTop: "1rem"}}>
+                                    <FaWallet size="20" style={{marginRight: ".5rem"}} />
+                                    {otherProfile?.hexAddress ?? '-'}
+                                </Text>
+                            </Grid>
+
+
+                            <Grid css={{marginTop: "3rem",  zIndex:"1"}}> 
+                                <Button.Group size="md" vertical borderWeight="light" bordered css={{textGradient: "45deg, $yellow600 -20%, $red600 100%"}}>
+                                    <Button
+                                        onClick={() => handleShowFollowers(otherProfile!)}
+                                    >
+                                        <HiUsers size="20" /> 
+                                        <b style={{margin: '.25rem', fontSize: "2rem"}}> 
+                                            {otherProfile?.followedBy?.length ?? 0}
+                                        </b> 
+                                        <i style={{fontSize: '1rem'}}>Followers</i> 
+                                    </Button>
+                                    <Spacer />
+                                    <Spacer />
+                                    <Button
+                                        onClick={() => handleShowFollowing(otherProfile!)}
+                                    >
+                                        <HiUsers size="20" />
+                                        <b style={{margin: '.25rem', fontSize: "2rem"}}> 
+                                            {otherProfile?.following?.length ?? 0}
+                                        </b> 
+                                        <i style={{fontSize: '1rem'}}>Following</i>
+                                    </Button>
+                                </Button.Group>
+                            </Grid>
+
+                        </Grid.Container>
+                    </>
+                )
+            }
+
+            { 
+                // MY PROFILE
+                isMyProfile && (
                 <>
                     <Grid.Container gap={2} css={{justifyContent: "space-evenly" }}>
 
                         <Grid css={{marginTop: "3rem", zIndex:"1"}}>  
                             <Button.Group size="md" vertical color="gradient" bordered >
-                                <Button onClick={getMySearches}>
+                                <Button onClick={getHistoricalSearches}>
                                     <FaSearchDollar size="25" style={{paddingTop: '.25rem'}} />
                                     <Spacer x={.6} />
                                     <Text h5 css={{paddingTop: '1rem'}}>
@@ -328,9 +647,9 @@ export const ProfilePage = () => {
                         </Grid>
 
                         <Grid css={{marginTop: "3rem",  zIndex:"1"}}> 
-                            <Button.Group size="md" vertical borderWeight="light" color="error" bordered >
+                            <Button.Group size="md" vertical borderWeight="light" css={{textGradient: "45deg, $yellow600 -20%, $red600 100%"}} bordered >
                                 <Button
-                                    onClick={handleShowFollowers}
+                                    onClick={() => handleShowFollowers(profile)}
                                 >
                                     <HiUsers size="20" /> 
                                     <b style={{margin: '.25rem', fontSize: "2rem"}}> 
@@ -341,7 +660,7 @@ export const ProfilePage = () => {
                                 <Spacer />
                                 <Spacer />
                                 <Button
-                                    onClick={handleShowFollowing}
+                                    onClick={() => handleShowFollowing(profile)}
                                 >
                                     <HiUsers size="20" />
                                     <b style={{margin: '.25rem', fontSize: "2rem"}}> 
@@ -382,8 +701,13 @@ export const ProfilePage = () => {
                                             bordered
                                         />
                                         <Spacer />
-                                        <Text size="$sm" css={{ fontWeight: "bold" }}>
-                                            {follower.user?.email}
+                                        <Text size="$sm" css={{ fontWeight: "bold", '&:hover': {
+                                                textGradient: "45deg, $yellow600 -20%, $red600 100%",
+                                                cursor: follower.userId !== session_id ? "pointer" : "not-allowed",
+                                                fontWeight: "bold"
+                                        } }}
+                                            onClick={() => handleSearchProfile(follower.userId!)}
+                                        >{follower.user?.email}
                                         </Text>
                                 </li>
                             ))
@@ -422,8 +746,13 @@ export const ProfilePage = () => {
                                             bordered
                                         />
                                         <Spacer />
-                                        <Text size="$sm" css={{ fontWeight: "bold" }}>
-                                            {follow.user?.email}
+                                        <Text size="$sm" css={{ fontWeight: "bold", '&:hover': {
+                                                textGradient: "45deg, $yellow600 -20%, $red600 100%",
+                                                cursor: follow.userId !== session_id ? "pointer" : "not-allowed",
+                                                fontWeight: "bold"
+                                        } }}
+                                            onClick={() => handleSearchProfile(follow.userId!)}
+                                        >{follow.user?.email}
                                         </Text>
                                 </li>
                             ))
@@ -457,25 +786,31 @@ export const ProfilePage = () => {
                                     <div style={{display: "flex", flexDirection: "row" }} key={search.id}>
                                         <Avatar 
                                             css={{ size: "$10" }}
-                                            src={avatarUrl}
+                                            src={(isMyProfile ? avatarUrl : otherProfile?.avatarUrl) ?? DEFAULTS.avatar}
                                             color="gradient"
                                             bordered
                                         />
                                         <Spacer />
-                                            <Text size="$md" onClick={() => console.log(search.query, search.id)} css={{ '&:hover': {
-                                                color: '$pink800',
-                                                cursor: "pointer"
-                                            }, }}>
-                                                {capitalizeFirstLetter(search.intents[0].value)}
+                                            <div>
+                                                <Text 
+                                                    size="$md"
+                                                    css={{ fontSize: 16,  '&:hover': {
+                                                        textGradient: "45deg, $yellow600 -20%, $red600 100%",
+                                                        cursor: "pointer",
+                                                        fontWeight: "bold"
+                                                    }}}
+                                                    onClick={() => handleSearchHistoricQuery(search.intents[0].value)}
+                                                >
+                                                    {capitalizeFirstLetter(search.intents[0].value)}
+                                                </Text>
                                                 <span style={{fontWeight: "bold", color:"greenyellow", display: "block", fontSize: "11.5px"}}>
                                                     {moment(search.createdAt).format('MMMM Do YYYY, h:mm:ss').toString()}
                                                 </span>
                                                 <SiSubstack size={18} />
                                                 &nbsp;&nbsp;&nbsp;
                                                 <MdFavorite size={18} /> 
-                                            </Text>
-                               
-                                    </div>
+                                            </div>
+                                     </div>
                             )
                         ))
                     }

@@ -60,7 +60,9 @@ export default function TokenTransactions(
                                             <Text 
                                                 size={13}
                                                 color={getColor(columnKey.toString())}
-                                                css={{ fontWeight: columnKey === 'hash' ? 'bold' : '' }}
+                                                css={{ fontWeight: columnKey === 'hash' ? 'bold' : '', '&:hover': {
+                                                    cursor: 'help'
+                                                } }}
                                             >
                                                 {item[columnKey as keyof T] ?? '-'}
                                             </Text>

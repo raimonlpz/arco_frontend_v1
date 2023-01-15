@@ -11,6 +11,8 @@ import { NFT_TransfersByBlockScheme } from "../_schemes_/NFT_TransfersByBlockSch
 import { NFT_TransfersByContractScheme } from "../_schemes_/NFT_TransfersByContractScheme";
 import { NFT_TransfersByWalletScheme } from "../_schemes_/NFT_TransfersByWalletScheme";
 import { NFT_TransfersFromBlockToBlockScheme } from "../_schemes_/NFT_TransfersFromBlockToBlockScheme";
+import { Resolver_ResolveENSNameScheme } from "../_schemes_/Resolver_ResolveENSNameScheme";
+import { Resolver_ResolveUnstoppableDomainScheme } from "../_schemes_/Resolver_UnstoppableDomainScheme";
 import { Token_BalanceByWalletScheme } from "../_schemes_/Token_BalanceByWalletScheme";
 import { Token_MetadataByContractScheme } from "../_schemes_/Token_MetadataByContractScheme";
 import { Token_MetadataBySymbolsScheme } from "../_schemes_/Token_MetadataBySymbolsScheme";
@@ -25,6 +27,8 @@ import NFTCollectionMetadata from "./_tables_/NFTCollectionMetadata";
 import NFTCollectionsInWallet from "./_tables_/NFTCollectionsInWallet";
 import NFTsCollection from "./_tables_/NFTsCollection";
 import NFTsTransfers from "./_tables_/NFTsTransfers";
+import ResolverDomain from "./_tables_/ResolverDomain";
+import ResolverENS from "./_tables_/ResolverENS";
 import TokenBalances from "./_tables_/TokenBalances";
 import TokenMetadata from "./_tables_/TokenMetadata";
 import TokenPrice from "./_tables_/TokenPrice";
@@ -124,6 +128,21 @@ export default function Resolver(
                     setParams(results.data)
                 }
                 break;
+
+            case 'RESOLVER_resolve_ens_name':
+                if (results.data as Resolver_ResolveENSNameScheme) {
+                    setScheme(SchemeUI.ResolvedENSNameUI)
+                    setParams(results.data)
+                }
+                break;
+
+            case 'RESOLVER_unstoppable_domain':
+                if (results.data as Resolver_ResolveUnstoppableDomainScheme) {
+                    setScheme(SchemeUI.ResolvedDomain)
+                    setParams(results.data)
+                }
+                break;
+
         }
 
     }, [results])
@@ -195,6 +214,18 @@ export default function Resolver(
         if (scheme === SchemeUI.BlockByHashUI) {
             return <BlockByHash block={params! as
                 | Block_BlockByHashScheme
+            }/>
+        }
+
+        if (scheme === SchemeUI.ResolvedENSNameUI) {
+            return <ResolverENS ens={params! as 
+                | Resolver_ResolveENSNameScheme
+            }/>
+        }
+
+        if (scheme === SchemeUI.ResolvedDomain) {
+            return <ResolverDomain domain={params! as 
+                | Resolver_ResolveUnstoppableDomainScheme 
             }/>
         }
     }

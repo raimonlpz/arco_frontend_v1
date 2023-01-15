@@ -10,5 +10,7 @@ export enum SchemeUI {
     TokenBalancesUI,
     TokenPriceUI,
     TransactionByHashUI,
-    BlockByHashUI
+    BlockByHashUI,
+    ResolvedENSNameUI,
+    ResolvedDomain
 }

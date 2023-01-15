@@ -2,7 +2,7 @@
 import './Balance_BalanceByWalletScheme';
 
 import './Block_BlockByDateScheme';
-import './Block_BlockByHashScheme';
+import './Block_BlockByHashScheme'; // X
 
 import './Defi_PairAddress';
 import './Defi_PairReservesScheme';
@@ -25,8 +25,8 @@ import './NFT_TransfersByWalletScheme'; // X
 import './NFT_TransfersFromBlockToBlockScheme'; // X
 import './NFT_SearchNFTsScheme';
 
-import './Resolver_ResolveENSNameScheme';
-import './Resolver_UnstoppableDomainScheme';
+import './Resolver_ResolveENSNameScheme'; // X
+import './Resolver_UnstoppableDomainScheme'; // X
 
 import './Solana_NativeBalanceScheme';
 import './Solana_NFTContractMetadataScheme';

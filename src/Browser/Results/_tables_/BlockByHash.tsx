@@ -20,7 +20,7 @@ export default function BlockByHash(
 
     const getColorHashTable = (columnKey: string) => {
         return columnKey === 'hash' ? 'success' : 
-        columnKey === 'timestamp' ? 'error' : 
+        columnKey === 'timestamp' ? 'secondary' : 
         columnKey === 'miner' ? 'warning' : 
        '';
     }
@@ -33,6 +33,13 @@ export default function BlockByHash(
         .filter((col) => col.uid !== "logs" && col.uid !== "input");
 
 
+    const getColorHashTransaction = (columnKey: string) => {
+        return columnKey === 'hash' ? 'success' : 
+        columnKey === 'from_address' ? 'error' : 
+        columnKey === 'to_address' ? 'warning' : 
+        columnKey === 'block_timestamp' ? 'secondary' : 
+       '';
+    }
 
     return (
         <div style={{display: "flex", flexDirection: "column"}}>
@@ -68,6 +75,9 @@ export default function BlockByHash(
                                         <Text
                                             size={13}
                                             color={getColorHashTable(columnKey.toString())}
+                                            css={{ '&:hover': {
+                                                cursor: 'help'
+                                            }}}
                                         >
                                             {item[columnKey as keyof T$Hash] ?? '-'}
                                         </Text>
@@ -105,11 +115,14 @@ export default function BlockByHash(
                                 <Table.Cell key={item.hash + columnKey.toString()} css={{ maxW: "100px", minW: "50px", paddingLeft: '.2rem', paddingRight: '.2rem' }}>
                                     <Tooltip
                                         content={item[columnKey as keyof T$Transaction] ?? '-'}
-                                        // contentColor={getColor(columnKey.toString()) as any}
+                                        contentColor={getColorHashTransaction(columnKey.toString()) as any}
                                     >
                                         <Text
                                             size={13}
-                                            // color={getColor(columnKey.toString())}
+                                            color={getColorHashTransaction(columnKey.toString())}
+                                            css={{ '&:hover': {
+                                                cursor: 'help'
+                                            }}}
                                             // css={{ fontWeight: columnKey === 'symbol' ? 'bold' : columnKey === 'name' ? 'bold' : '' }}
                                         >
                                             {item[columnKey as keyof T$Transaction] ?? '-'}

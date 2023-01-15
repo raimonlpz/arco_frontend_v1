@@ -61,7 +61,9 @@ export default function TransactionByHash(
                                     <Text
                                         size={13}
                                         color={getColor(columnKey.toString())}
-                                        css={{ fontWeight: columnKey === 'block_hash' ? 'bold' : '' }}
+                                        css={{ fontWeight: columnKey === 'block_hash' ? 'bold' : '', '&:hover': {
+                                            cursor: 'help'
+                                        } }}
                                     >
                                         {item[columnKey as keyof T] ?? '-'}
                                     </Text>

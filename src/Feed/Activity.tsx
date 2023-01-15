@@ -3,9 +3,11 @@ import moment from "moment";
 import { useCallback, useEffect, useState } from "react";
 import { MdFavorite } from "react-icons/md";
 import { SiSubstack } from "react-icons/si";
+import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../Auth/_store_/auth"
 import { SearchResponse } from "../Browser/Search/_models_";
 import { SearchService } from "../Browser/Search/_services_";
+import { useSearchStore } from "../Browser/Search/_store_/search";
 import { ProfileResponse } from "../Profile/_models_";
 import { Layout } from "../Shared/_ui_/Layout/Layout"
 import LoadingSpinner from "../Shared/_ui_/Loading/Loading";
@@ -14,12 +16,22 @@ import { capitalizeFirstLetter } from "../Shared/_utils_/functions";
 
 export const ActivityPage = () => {
 
+    const navigate = useNavigate();
+
     const [allSearches, setAllSearches] = useState<(SearchResponse & { profile: ProfileResponse })[]>();
 
     const [
         session,
+        session_id
     ] = useAuthStore((state) => [
-        state.access_token
+        state.access_token,
+        state.session_id
+    ]);
+
+    const [
+        setQuery
+    ] = useSearchStore((state) => [
+        state.setQuery
     ]);
 
     const [loading, setLoading] = useState(false);
@@ -43,12 +55,26 @@ export const ActivityPage = () => {
             setLoading(false);
         }
     }), [session]);
+    
 
 
     useEffect(() => {
         getSearches();
     }, [getSearches])
 
+
+
+    const handleSearchHistoricQuery = (query: string) => {
+        setQuery(query);
+        navigate('/search')
+    }
+
+
+    const handleSearchProfile = (userId?: number) => {
+        if (session_id !== userId) {
+            navigate(`/profile/${userId}`)
+        } 
+    }
 
 
     return (
@@ -68,18 +94,33 @@ export const ActivityPage = () => {
                                     bordered
                                 />
                                 <Spacer />
-                                <Text size="$md" onClick={() => console.log(search.query, search.id)} css={{ '&:hover': {
-                                    color: '$pink800',
-                                    cursor: "pointer"
-                                }, }}>
-                                    {capitalizeFirstLetter(search.intents[0].value)}
+                                <div>
+                                    <Text
+                                        size="$md"
+                                        css={{ lineHeight: '1.4rem', '&:hover': {
+                                                textGradient: "45deg, $yellow600 -20%, $red600 100%",
+                                                cursor: "pointer",
+                                                fontWeight: "bold"
+                                        }, }}
+                                        onClick={() => handleSearchHistoricQuery(search.intents[0].value)}
+                                    >
+                                        {capitalizeFirstLetter(search.intents[0].value)}
+                                    </Text>
                                     <span style={{fontWeight: "bold", color:"greenyellow", display: "block", fontSize: "11.5px"}}>
-                                        {moment(search.createdAt).format('MMMM Do YYYY, h:mm:ss').toString()} | <span style={{color: 'cyan', fontSize: 14}}> @{search.profile.handle ?? 'unknown'}</span>
+                                        {moment(search.createdAt).format('MMMM Do YYYY, h:mm:ss').toString()} 
+                                        <Text 
+                                            css={{color: 'cyan', fontSize: 16,  '&:hover': {
+                                                textGradient: "45deg, $yellow600 -20%, $red600 100%",
+                                                cursor: search.profile.userId !== session_id ? "pointer" : "not-allowed",
+                                                fontWeight: "bold"
+                                        }}}
+                                            onClick={() => handleSearchProfile(search.profile.userId)}
+                                        > @{search.profile.handle ?? 'unknown'}</Text>
                                     </span>
                                     <SiSubstack size={18} />
                                     &nbsp;&nbsp;&nbsp;
                                     <MdFavorite size={18} />                              
-                                </Text>
+                                </div>
                             </Grid>
                     )
                 ))}

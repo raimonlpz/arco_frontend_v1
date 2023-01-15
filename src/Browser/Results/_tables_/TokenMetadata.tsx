@@ -67,7 +67,9 @@ export default function TokenMetadata(
                                         <Text
                                             size={13}
                                             color={getColor(columnKey.toString())}
-                                            css={{ fontWeight: columnKey === 'symbol' ? 'bold' : columnKey === 'name' ? 'bold' : '' }}
+                                            css={{ fontWeight: columnKey === 'symbol' ? 'bold' : columnKey === 'name' ? 'bold' : '', '&:hover': {
+                                                cursor: 'help'
+                                            } }}
                                         >
                                             {columnKey === 'symbol' ? '$' : ''}{item[columnKey as keyof T] ?? '-'}
                                         </Text>

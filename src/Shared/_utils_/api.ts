@@ -25,4 +25,9 @@ export class API_ROUTES {
         byUser: (userId: string | number) => `${this.BASE}/search/users/${userId}`,
         raw: `${this.BASE}/search/raw`
     }
+
+    static FOLLOWS ={
+        follow: `${this.BASE}/follows/follow`, 
+        unfollow: `${this.BASE}/follows/unfollow`
+    }
 }

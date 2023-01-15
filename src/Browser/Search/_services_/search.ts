@@ -37,7 +37,7 @@ export class SearchService implements ISearchService {
     }
 
 
-    getSearchesByUserId = async (token: string, userId: string): Promise<SearchResponse[] | SearchError | Error> => {
+    getSearchesByUserId = async (token: string, userId: number): Promise<SearchResponse[] | SearchError | Error> => {
         
         const requestOptions = {
             method: 'GET',

@@ -66,7 +66,9 @@ export default function NFTsTransfers(
                                             <Text 
                                                 size={13}
                                                 color={getColor(columnKey.toString()) as any}
-                                                css={{ fontWeight: columnKey === 'transaction_hash' ? 'bold' : columnKey === 'token_address' ? 'bold' : '' }}
+                                                css={{ fontWeight: columnKey === 'transaction_hash' ? 'bold' : columnKey === 'token_address' ? 'bold' : '', '&:hover': {
+                                                    cursor: 'help'
+                                                } }}
                                             >
                                                 {item[columnKey as keyof T] ?? '-'}
                                             </Text>

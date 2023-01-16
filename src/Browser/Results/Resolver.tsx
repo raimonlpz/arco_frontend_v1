@@ -1,4 +1,5 @@
 
+import { Button, Spacer, Tooltip } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import NoResults from "../../Shared/_ui_/NoResults/NoResults";
 import { SearchQueryResponse, SearchScheme } from "../Search/_models_";
@@ -34,6 +35,11 @@ import TokenMetadata from "./_tables_/TokenMetadata";
 import TokenPrice from "./_tables_/TokenPrice";
 import TokenTransactions from "./_tables_/TokenTransactions";
 import TransactionByHash from "./_tables_/TransactionByHash";
+import { SiSubstack } from 'react-icons/si';
+import { MdFavorite } from 'react-icons/md';
+import { SearchService } from "../Search/_services_";
+import { Bookmarker } from "../Search/_models_/Bookmarker";
+import { useAuthStore } from "../../Auth/_store_/auth";
 
 
 
@@ -41,12 +47,20 @@ export default function Resolver(
     { results }: { results: SearchQueryResponse }
 ) {
 
+    const [
+        session,
+    ] = useAuthStore((state) => [ 
+        state.access_token, 
+    ]);
+
     const [scheme, setScheme] = useState<SchemeUI>();
     const [params, setParams] = useState<SearchScheme>();
 
-    useEffect(() => {
+    const [addedToFavs, setAddedToFavs] = useState(false);
+    const [addedToSubs, setAddedToSubs] = useState(false);
 
-        console.log(results.action.name)
+
+    useEffect(() => {
 
         switch (results.action.name) {
 
@@ -148,94 +162,155 @@ export default function Resolver(
     }, [results])
 
 
-    if (typeof scheme === 'number') {
 
-        if (scheme === SchemeUI.TokenTransactionsUI) {
-            return <TokenTransactions transactions={params! as 
-                | Token_TransactionsByContractScheme 
-                | Token_TransactionsByWalletScheme
-                | Transaction_TransactionsByWalletScheme
-            }/>
+    const handleAddToFavs = async (bookmarker: Bookmarker) => {
+        if (!addedToFavs) {
+            const searchService = new SearchService();
+            await searchService.addToFavorites(session!, bookmarker).then((_) => {
+                setAddedToFavs(true);
+            });
         }
+    }
 
-        if (scheme === SchemeUI.TokenMetadataUI) {
-            return <TokenMetadata metadata={params! as 
-                | Token_MetadataBySymbolsScheme
-                | Token_MetadataByContractScheme
-            }/>
-        }
-        
-        if (scheme === SchemeUI.TokenBalancesUI) {
-            return <TokenBalances balances={params! as 
-                | Token_BalanceByWalletScheme
-            }/>
-        }
 
-        if (scheme === SchemeUI.NFTCollectionMetadataUI) {
-            return <NFTCollectionMetadata metadata={params! as
-                | NFT_CollectionMetadataScheme
-            }/>
+    const handleAddToSubscription = async (bookmarker: Bookmarker) => {
+        if (!addedToSubs) {
+            const searchService = new SearchService();
+            await searchService.addToSubscriptions(session!, bookmarker).then((_) => {
+                setAddedToSubs(true);
+            })
         }
+    }
 
-        if (scheme === SchemeUI.NFTSCollectionUI) {
-            return <NFTsCollection nfts={params! as
-                | NFT_NFTsByContractScheme
-                | NFT_NFTsByWalletScheme 
-            }/>
-        }
 
-        if (scheme === SchemeUI.NFTCollectionsByWalletUI) {
-            return <NFTCollectionsInWallet collections={params! as 
-                | NFT_CollectionsByWalletScheme
-            }/>
-        }
 
-        if (scheme === SchemeUI.NFTSTransfersUI) {
-            return <NFTsTransfers transfers={params! as 
-                | NFT_TransfersByBlockScheme 
-                | NFT_TransfersByContractScheme
-                | NFT_TransfersByWalletScheme
-                | NFT_TransfersFromBlockToBlockScheme
-            }/>
-        }
+    const TableResolved = () => {
+        if (typeof scheme === 'number') {
 
-        if (scheme === SchemeUI.TokenPriceUI) {
-            return <TokenPrice prices={params! as
-                | Token_PriceScheme
-            }/>
-        }
-
-        if (scheme === SchemeUI.TransactionByHashUI) {
-            return <TransactionByHash transaction={params! as 
-                | Transaction_TransactionByHashScheme
-            }/>
-        }
-
-        if (scheme === SchemeUI.BlockByHashUI) {
-            return <BlockByHash block={params! as
-                | Block_BlockByHashScheme
-            }/>
-        }
-
-        if (scheme === SchemeUI.ResolvedENSNameUI) {
-            return <ResolverENS ens={params! as 
-                | Resolver_ResolveENSNameScheme
-            }/>
-        }
-
-        if (scheme === SchemeUI.ResolvedDomain) {
-            return <ResolverDomain domain={params! as 
-                | Resolver_ResolveUnstoppableDomainScheme 
-            }/>
+            if (scheme === SchemeUI.TokenTransactionsUI) {
+                return <TokenTransactions transactions={params! as 
+                    | Token_TransactionsByContractScheme 
+                    | Token_TransactionsByWalletScheme
+                    | Transaction_TransactionsByWalletScheme
+                }/>
+            }
+    
+            if (scheme === SchemeUI.TokenMetadataUI) {
+                return <TokenMetadata metadata={params! as 
+                    | Token_MetadataBySymbolsScheme
+                    | Token_MetadataByContractScheme
+                }/>
+            }
+            
+            if (scheme === SchemeUI.TokenBalancesUI) {
+                return <TokenBalances balances={params! as 
+                    | Token_BalanceByWalletScheme
+                }/>
+            }
+    
+            if (scheme === SchemeUI.NFTCollectionMetadataUI) {
+                return <NFTCollectionMetadata metadata={params! as
+                    | NFT_CollectionMetadataScheme
+                }/>
+            }
+    
+            if (scheme === SchemeUI.NFTSCollectionUI) {
+                return <NFTsCollection nfts={params! as
+                    | NFT_NFTsByContractScheme
+                    | NFT_NFTsByWalletScheme 
+                }/>
+            }
+    
+            if (scheme === SchemeUI.NFTCollectionsByWalletUI) {
+                return <NFTCollectionsInWallet collections={params! as 
+                    | NFT_CollectionsByWalletScheme
+                }/>
+            }
+    
+            if (scheme === SchemeUI.NFTSTransfersUI) {
+                return <NFTsTransfers transfers={params! as 
+                    | NFT_TransfersByBlockScheme 
+                    | NFT_TransfersByContractScheme
+                    | NFT_TransfersByWalletScheme
+                    | NFT_TransfersFromBlockToBlockScheme
+                }/>
+            }
+    
+            if (scheme === SchemeUI.TokenPriceUI) {
+                return <TokenPrice prices={params! as
+                    | Token_PriceScheme
+                }/>
+            }
+    
+            if (scheme === SchemeUI.TransactionByHashUI) {
+                return <TransactionByHash transaction={params! as 
+                    | Transaction_TransactionByHashScheme
+                }/>
+            }
+    
+            if (scheme === SchemeUI.BlockByHashUI) {
+                return <BlockByHash block={params! as
+                    | Block_BlockByHashScheme
+                }/>
+            }
+    
+            if (scheme === SchemeUI.ResolvedENSNameUI) {
+                return <ResolverENS ens={params! as 
+                    | Resolver_ResolveENSNameScheme
+                }/>
+            }
+    
+            if (scheme === SchemeUI.ResolvedDomain) {
+                return <ResolverDomain domain={params! as 
+                    | Resolver_ResolveUnstoppableDomainScheme 
+                }/>
+            }
         }
     }
     
 
+
+    
+
     return (
-        <div style={{
-            marginTop: "10%"
-        }}>
-            <NoResults />
-        </div>
+        <>
+            {TableResolved() 
+                ? (
+                    <div style={{position: "relative"}}>
+                        {TableResolved()}
+                        <div style={{ position: "fixed", top: "50%", right: "20px", zIndex: "999" }}>
+                            <Button.Group size="md" vertical color="warning" shadow>
+                                <Tooltip
+                                    content="Suscribe"
+                                >
+                                    <Button 
+                                        css={{borderRadius: "50%", padding: "23px 14px"}}
+                                        onClick={() => handleAddToSubscription(results.bookmarking)}
+                                    >
+                                        <SiSubstack size="20" style={{color: addedToSubs ? "white" : "black"}} />
+                                    </Button>
+                                </Tooltip>
+                                <Spacer />
+                                <Tooltip
+                                    content="Favorites"
+                                >
+                                    <Button 
+                                        css={{borderRadius: "50%", padding: "23px 14px"}}
+                                        onClick={() => handleAddToFavs(results.bookmarking)}
+                                    >
+                                        <MdFavorite size="20" style={{color: addedToFavs ? "white" : "black"}} />
+                                    </Button>
+                                </Tooltip>
+                            </Button.Group>
+                        </div>
+                    </div>
+                ) 
+                : (
+                    <div style={{marginTop: "10%"}}>
+                        <NoResults />
+                    </div>
+                )
+            }
+        </>
     )
 }

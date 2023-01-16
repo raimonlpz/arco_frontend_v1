@@ -26,8 +26,17 @@ export class API_ROUTES {
         raw: `${this.BASE}/search/raw`
     }
 
-    static FOLLOWS ={
+    static FOLLOWS = {
         follow: `${this.BASE}/follows/follow`, 
         unfollow: `${this.BASE}/follows/unfollow`
+    }
+
+    static FAVORITES = {
+        addToFavorites: `${this.BASE}/favorites/new`,
+        addToSubscription: `${this.BASE}/subscriptions/new`
+    }
+
+    static CATEGORIES = {
+        getSearchesByCategory: `${this.BASE}/search/category`
     }
 }

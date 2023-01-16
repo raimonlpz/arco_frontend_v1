@@ -143,7 +143,7 @@ export const SearchPage = () => {
                 <div style={{padding: '2rem'}}>
                     <Radio.Group label="Select Chain" defaultValue="A" validationState="invalid" onChange={handleChainSelected}>
                         {CHAINS.map((chain) => (
-                            <Radio value={chain.id} description={chain.id} key={chain.id}>
+                            <Radio value={chain.id} description={'#' + chain.id} key={chain.id} css={{textGradient: "45deg, $yellow600 -20%, $red600 100%"}}>
                               {chain.name}
                             </Radio>
                         ))}
@@ -151,6 +151,7 @@ export const SearchPage = () => {
                 </div>
             </Modal>
             <LoadingSpinner loading={loading} />
+
         </Layout>
     );
 }

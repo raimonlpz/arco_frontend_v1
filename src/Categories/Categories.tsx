@@ -1,51 +1,50 @@
-import { Button, Card, Grid, Row, Text } from "@nextui-org/react"
+import { Button, Card, Grid, Modal, Row, Text } from "@nextui-org/react"
+import { useState } from "react";
+import { useAuthStore } from "../Auth/_store_/auth";
 import { Layout } from "../Shared/_ui_/Layout/Layout"
+import { IntentResponse } from "./_models_/Intent";
+import { CategoryService } from "./_services_";
+import { Categories } from "./_utils_/categories";
 
 
 export const CategoriesPage = () => {
 
-    const categories = [
-        {
-            id: 'social',
-            title: 'Social'
-        },
-        {
-            id: 'nfts',
-            title: 'NFTs'
-        },
-        {
-            id: 'defi',
-            title: 'DeFi'
-        },
-        {
-            id: 'solana',
-            title: 'Solana'
-        },
-        {
-            id: 'daos',
-            title: 'DAOs'
-        },
-        {
-            id: 'dex',
-            title: 'DeX'
-        },
-        {
-            id: 'evm',
-            title: 'EVM'
-        },
-        {
-            id: 'privacy',
-            title: 'Privacy'
-        }
-    ]
+    const [
+        session
+    ] = useAuthStore((state) => [
+        state.access_token
+    ])
+
+    const [intents, setIntents] = useState<IntentResponse[]>();
+    const [categorySelected, setCategorySelected] = useState<string>();
+
+
+    const handleCategorySelected = async (category: {
+        id: number;
+        title: string;
+    }) => {
+        setCategorySelected(category.title)
+
+        const categoryService = new CategoryService();
+        categoryService.getSearchesByCategory(session!, category.id).then((res) => {
+            const I = categoryService.mapType(res);
+            switch (I) {
+                case 'IntentResponse':
+                    setIntents(res as IntentResponse[]);
+                    break;
+                case 'Error':
+                    break;
+            } 
+        })
+    }
 
     return (
         <Layout>
             <Grid.Container gap={2} justify="center" css={{ padding: "2.5rem" }}>
     
-                { categories.map(category => (
+                { Categories.map(category => (
                     <Grid xs={3} style={{display: "flex", flexDirection: "row", justifyContent: "center" }} key={category.id}>
-                        <Card variant="bordered" css={{width: '200px', height: '200px'}} isPressable>
+                        <Card variant="bordered" css={{width: '200px', height: '200px'}} isPressable onClick={() => handleCategorySelected(category)}>
                             <Card.Body>
                                 <Card.Image
                                     src="https://static.vecteezy.com/system/resources/previews/002/525/469/non_2x/lines-in-modern-style-line-art-minimalist-print-pattern-geometric-style-black-and-white-illustration-vector.jpg"
@@ -81,6 +80,20 @@ export const CategoriesPage = () => {
                     </Grid>
                 ))}
             </Grid.Container>
+
+
+
+            <Modal
+              scroll
+              width="50vw"
+              closeButton
+              aria-labelledby="Category"
+            >
+                <Modal.Header>
+                    {categorySelected}
+                </Modal.Header>
+                
+            </Modal>
         </Layout>
     )
 }

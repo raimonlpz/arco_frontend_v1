@@ -12,5 +12,25 @@ export interface ProfileResponse extends ProfileDTO {
         email: string;
         id: number;
         createdAt: string;
-    }
+    };
+    subscriptions?: [
+        {
+            intents: {
+                value: string;
+            }[],
+            entities: {
+                values: string[];
+            }[]
+        }
+    ];
+    favorites?: [
+        {
+            intents: {
+                value: string;
+            }[],
+            entities: {
+                values: string[];
+            }[]
+        }
+    ]
 }

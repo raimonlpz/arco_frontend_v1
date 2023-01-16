@@ -40,6 +40,12 @@ export const ProfilePage = () => {
     const [following, setFollowing] = useState<ProfileResponse[]>([]);
     const { setVisible: setModalFollowing, bindings: bindingsModalFollowing } = useModal();
 
+    const [subscriptions, setSubscriptions] = useState<ProfileResponse["subscriptions"]>();
+    const {setVisible: setModalSubscriptions, bindings: bindingsModalSubscriptions } = useModal();
+
+    const [favorites, setFavorites] = useState<ProfileResponse["favorites"]>();
+    const {setVisible: setModalFavorites, bindings: bindingsModalFavorites} = useModal();
+
     const [otherProfile, setOtherProfile] = useState<ProfileResponse>();
     const [profileIsFollowed, setProfileIsFollowed] = useState<boolean>(false);
 
@@ -164,6 +170,34 @@ export const ProfilePage = () => {
             }
             setLoading(false);
         })
+    }
+
+
+    const getSubscriptions = async () => {
+
+        if (isMyProfile) {
+            await fetchMyProfileUpdated().then((_) => {
+                setSubscriptions(profile.subscriptions);
+                setModalSubscriptions(true);
+            })
+
+        } else { 
+
+            await fetchOtherProfile().then((_) => {
+                setSubscriptions(otherProfile?.favorites);
+                setModalSubscriptions(true);
+            })
+        }
+    }
+
+
+    const getFavorites = async () => {
+
+        await fetchMyProfileUpdated().then((_) => {
+            setFavorites(profile.favorites); 
+            setModalFavorites(true);
+        })
+
     }
 
 
@@ -310,6 +344,7 @@ export const ProfilePage = () => {
                     case 'FollowResponse':
                         await fetchOtherProfile();
                         await fetchMyProfileUpdated();
+                        setLoading(false);
                         setProfileIsFollowed(true);
                         break;
                     case 'ProfileError':
@@ -332,6 +367,7 @@ export const ProfilePage = () => {
                     case 'FollowResponse':
                         await fetchOtherProfile();
                         await fetchMyProfileUpdated();
+                        setLoading(false);
                         setProfileIsFollowed(false);
                         break;
                     case 'ProfileError':
@@ -354,14 +390,16 @@ export const ProfilePage = () => {
     const handleSearchProfile = (userId: number) => {
         if (session_id !== userId) {
 
-            // Reset values
+            // Reset values -Cleanup-
             setFollowers([])
             setFollowing([])
+            setFavorites(undefined)
+            setSubscriptions(undefined)
             setProfileIsFollowed(false)
             setIsMyProfile(false)
-            setOtherProfile(undefined);
             setModalFollowers(false);
             setModalFollowing(false);
+            setOtherProfile(undefined);
 
             navigate(`/profile/${userId}`)
         }
@@ -397,7 +435,7 @@ export const ProfilePage = () => {
                                     </Button>
                                     <Spacer />
                                     <Spacer />
-                                    <Button>
+                                    <Button onClick={getSubscriptions}>
                                         <SiSubstack size="25" style={{paddingTop: '.25rem'}} />
                                         <Spacer x={.4} />
                                         <Text h5 css={{paddingTop: '1rem'}}>
@@ -516,7 +554,7 @@ export const ProfilePage = () => {
                                 </Button>
                                 <Spacer />
                                 <Spacer />
-                                <Button>
+                                <Button onClick={getSubscriptions}>
                                     <SiSubstack size="25" style={{paddingTop: '.25rem'}} />
                                     <Spacer x={.4} />
                                     <Text h5 css={{paddingTop: '1rem'}}>
@@ -525,7 +563,7 @@ export const ProfilePage = () => {
                                 </Button>
                                 <Spacer />
                                 <Spacer />
-                                <Button>
+                                <Button onClick={getFavorites}>
                                     <MdFavorite 
                                         size="30" 
                                         style={{paddingTop: '.25rem', paddingBottom: '.25rem'}} 
@@ -769,6 +807,105 @@ export const ProfilePage = () => {
             </Modal>
 
 
+            <Modal 
+                scroll
+                width="50vw"
+                closeButton
+                aria-labelledby="Favorites"
+                aria-describedby="User favorites"
+                {...bindingsModalFavorites}
+            >
+                <Modal.Header>
+                    <SiSubstack size="40" />
+                </Modal.Header>
+                <Modal.Body css={{alignItems: "center", margin: "0"}}>
+                    {
+                        favorites?.map((sub, i) => (
+                           <div key={i}> 
+                                {[...sub.intents.map(e => (
+                                    <Text
+                                        size="$md"
+                                        css={{ fontSize: 16,  '&:hover': {
+                                            textGradient: "45deg, $yellow600 -20%, $red600 100%",
+                                            cursor: "help",
+                                            fontWeight: "bold"
+                                        }}}
+                                    >{e.value}</Text>
+                                )),
+                                ...sub.entities.map(e => (
+                                    <Text
+                                        size="$md"
+                                        css={{ fontSize: 16,  '&:hover': {
+                                            textGradient: "45deg, $yellow600 -20%, $red600 100%",
+                                            cursor: "help",
+                                            fontWeight: "bold"
+                                        }}}
+                                    >{e.values[0]}</Text>
+                                ))]}
+                                <Spacer />
+                                <Divider />
+                           </div>
+                        ))
+                    }
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button auto bordered color="secondary" onClick={() => setModalFavorites(false)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+
+
+            <Modal 
+                scroll
+                width="50vw"
+                closeButton
+                aria-labelledby="Subscriptions"
+                aria-describedby="User subscriptions"
+                {...bindingsModalSubscriptions}
+            >
+                <Modal.Header>
+                    <SiSubstack size="40" />
+                </Modal.Header>
+                <Modal.Body css={{alignItems: "center", margin: "0"}}>
+                    {
+                        subscriptions?.map((sub, i) => (
+                           <div key={i}> 
+                                {[...sub.intents.map(e => (
+                                    <Text
+                                        size="$md"
+                                        css={{ fontSize: 16,  '&:hover': {
+                                            textGradient: "45deg, $yellow600 -20%, $red600 100%",
+                                            cursor: "help",
+                                            fontWeight: "bold"
+                                        }}}
+                                    >{e.value}</Text>
+                                )),
+                                ...sub.entities.map(e => (
+                                    <Text
+                                        size="$md"
+                                        css={{ fontSize: 16,  '&:hover': {
+                                            textGradient: "45deg, $yellow600 -20%, $red600 100%",
+                                            cursor: "help",
+                                            fontWeight: "bold"
+                                        }}}
+                                    >{e.values[0]}</Text>
+                                ))]}
+                                <Spacer />
+                                <Divider />
+                           </div>
+                        ))
+                    }
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button auto bordered color="secondary" onClick={() => setModalSubscriptions(false)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+
 
             <Modal
                 scroll
@@ -781,6 +918,7 @@ export const ProfilePage = () => {
                 <Modal.Header>
                     <FaSearchDollar size={40}/>
                 </Modal.Header>
+                
                 <Modal.Body>
                     {
                         mySearches.map(search => (

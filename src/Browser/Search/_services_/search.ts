@@ -1,5 +1,6 @@
 import { API_ROUTES } from "../../../Shared/_utils_/api";
 import { ISearchService, SearchError, SearchQueryResponse, SearchResponse, SearchResponseType } from "../_models_";
+import { Bookmarker } from "../_models_/Bookmarker";
 
 
 export class SearchService implements ISearchService {
@@ -69,6 +70,41 @@ export class SearchService implements ISearchService {
         return await fetch(API_ROUTES.SEARCH.raw, requestOptions)
             .then((res: Response) => res.json())
             .then((data: SearchQueryResponse | SearchError) => data)
+            .catch((error: Error) => error);
+
+    }
+
+
+    addToFavorites = async (token: string, bookmarker: Bookmarker): Promise<any> => {
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ bookmarker }) 
+        }
+
+        return await fetch (API_ROUTES.FAVORITES.addToFavorites, requestOptions)
+            .then((res: Response) => res.json())
+            .catch((error: Error) => error);
+    }
+
+
+    addToSubscriptions = async (token: string, bookmarker: Bookmarker): Promise<any> => {
+        
+        const requestOptions = {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ bookmarker }) 
+        }
+
+        return await fetch (API_ROUTES.FAVORITES.addToSubscription, requestOptions)
+            .then((res: Response) => res.json())
             .catch((error: Error) => error);
 
     }

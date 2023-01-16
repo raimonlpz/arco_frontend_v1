@@ -28,16 +28,16 @@ export const CHAINS = [
         name: 'Ethereum Görli'
     },
     {
-        id: 'mumbai testnet',
+        id: 'polygon',
+        name: 'Polygon Mainnet'
+    },
+    {
+        id: 'mumbai',
         name: 'Polygon Mumbai'
     },
     {
         id: 'optimism',
         name: 'Optimism'
-    },
-    {
-        id: 'polygon',
-        name: 'Polygon Mainnet'
     },
     {
         id: 'ronin',

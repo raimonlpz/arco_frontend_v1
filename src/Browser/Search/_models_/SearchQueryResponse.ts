@@ -35,6 +35,7 @@ import { Token_TransactionsByContractScheme } from "../../_schemes_/Token_Transa
 import { Token_TransactionsByWalletScheme } from "../../_schemes_/Token_TransactionsByWalletScheme";
 import { Transaction_TransactionByHashScheme } from "../../_schemes_/Transaction_TransactionByHashScheme";
 import { Transaction_TransactionsByWalletScheme } from "../../_schemes_/Transaction_TransactionsByWalletScheme";
+import { Bookmarker } from "./Bookmarker";
 
 
 export interface SearchQueryResponse {
@@ -43,6 +44,7 @@ export interface SearchQueryResponse {
         name: string;
     };
     data: SearchScheme;
+    bookmarking: Bookmarker; // for Sub & Favs Bookmarking
 }
 
 

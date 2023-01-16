@@ -1,7 +1,7 @@
 
 
 export const API_DEV_URL = "http://localhost:3333" // Port of 'arco_backend' api launched locally
-export const API_PROD_URL = "";
+export const API_PROD_URL = "https://arcobackendv1-production.up.railway.app/"; // Railway Service Hosting
 
 
 export const DEFAULTS = {

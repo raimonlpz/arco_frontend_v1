@@ -1,6 +1,7 @@
-import { Avatar, Grid, Spacer, Text } from "@nextui-org/react";
+import { Avatar, Button, Grid, Modal, Spacer, Text } from "@nextui-org/react";
 import moment from "moment";
 import { useCallback, useEffect, useState } from "react";
+import { FaUserAstronaut } from "react-icons/fa";
 import { MdFavorite } from "react-icons/md";
 import { SiSubstack } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +18,8 @@ import { capitalizeFirstLetter } from "../Shared/_utils_/functions";
 export const ActivityPage = () => {
 
     const navigate = useNavigate();
+
+    const [openAuthHelper, setOpenAuthHelper] = useState(false);
 
     const [allSearches, setAllSearches] = useState<(SearchResponse & { profile: ProfileResponse })[]>();
 
@@ -37,10 +40,10 @@ export const ActivityPage = () => {
     const [loading, setLoading] = useState(false);
 
     const getSearches = useCallback((async () => {
-        if (session) {
+        // if (session) {
             setLoading(true);
             const searchService = new SearchService();
-            const res = await searchService.getAllSearches(session!);
+            const res = await searchService.getAllSearches();
             const I = searchService.mapType(res);
             switch (I) {
                 case 'SearchResponse':
@@ -53,8 +56,9 @@ export const ActivityPage = () => {
                     break;
             }
             setLoading(false);
-        }
-    }), [session]);
+        // }
+
+    }), []);
     
 
 
@@ -65,12 +69,20 @@ export const ActivityPage = () => {
 
 
     const handleSearchHistoricQuery = (query: string) => {
+        if (!session) {
+            setOpenAuthHelper(true);
+            return;
+        }
         setQuery(query);
         navigate('/search')
     }
 
 
     const handleSearchProfile = (userId?: number) => {
+        if (!session) {
+            setOpenAuthHelper(true);
+            return;
+        }
         if (session_id !== userId) {
             navigate(`/profile/${userId}`)
         } 
@@ -129,6 +141,23 @@ export const ActivityPage = () => {
             <div style={{height: '80vh'}}>
                 <LoadingSpinner loading={loading} />
             </div>
+
+
+            <Modal
+                blur 
+                closeButton 
+                aria-labelledby="Login/Signup to Continue"
+                open={openAuthHelper}
+                onClose={() => setOpenAuthHelper(false)}
+                css={{ justifyContent: "center", alignItems: "center"}}
+            >
+                <FaUserAstronaut size={30} />
+                <Text>Login / Sign up to continue</Text>
+                <Spacer />
+                <Button onClick={() => navigate('/login')} bordered color="gradient"> OK </Button>
+                <Spacer />
+            </Modal>                            
+
         </Layout>
     )
 }

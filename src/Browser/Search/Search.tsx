@@ -12,6 +12,7 @@ import { SearchQueryResponse } from "./_models_";
 import Resolver from "../Results/Resolver";
 import { CHAINS } from "./_utils_/chains";
 import { useSearchStore } from "./_store_/search";
+import { FaUserAstronaut } from 'react-icons/fa';
 
 
 export const SearchPage = () => {
@@ -39,6 +40,8 @@ export const SearchPage = () => {
 
     const [chain, setChain] = useState<string>();
 
+    const [openAuthHelper, setOpenAuthHelper] = useState(false);
+
 
     useEffect(() => {
         if (search_query) {
@@ -50,6 +53,12 @@ export const SearchPage = () => {
 
 
     const handleSearch = async (search_query?: string) => {
+
+        if (!session) { 
+            setOpenAuthHelper(true);
+            return;
+        }
+
         const searchService = new SearchService();
         
         const Q = search_query ? search_query : query;
@@ -150,6 +159,23 @@ export const SearchPage = () => {
                     </Radio.Group>
                 </div>
             </Modal>
+
+
+            <Modal
+                blur 
+                closeButton 
+                aria-labelledby="Login/Signup to Continue"
+                open={openAuthHelper}
+                onClose={() => setOpenAuthHelper(false)}
+                css={{ justifyContent: "center", alignItems: "center"}}
+            >
+                <FaUserAstronaut size={30} />
+                <Text>Login / Sign up to continue</Text>
+                <Spacer />
+                <Button onClick={() => navigate('/login')} bordered color="gradient"> OK </Button>
+                <Spacer />
+            </Modal>
+
             <LoadingSpinner loading={loading} />
 
         </Layout>

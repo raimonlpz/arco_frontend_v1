@@ -5,13 +5,13 @@ import { Bookmarker } from "../_models_/Bookmarker";
 
 export class SearchService implements ISearchService {
 
-    getAllSearches = async (token: string): Promise<SearchResponse[] | SearchError | Error> => {
+    getAllSearches = async (token?: string): Promise<SearchResponse[] | SearchError | Error> => {
         
         const requestOptions = {
             method: 'GET',
             headers: { 
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token ? token : ''}`
             },
         }
 

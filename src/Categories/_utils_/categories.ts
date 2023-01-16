@@ -4,11 +4,11 @@ export const Categories = [
         title: 'Transactions'
     },
     {
-        id: 4,
+        id: 2,
         title: 'NFTs'
     },
     {
-        id: 5,
+        id: 1,
         title: 'Tokens'
     },
     {

@@ -1,4 +1,4 @@
-import { Button, Card, Divider, Grid, Modal, Row, Spacer, Text, useModal } from "@nextui-org/react"
+import { Button, Card, Grid, Modal, Row, Spacer, Text, useModal } from "@nextui-org/react"
 import { useState } from "react";
 import { FaSearchDollar, FaUserAstronaut } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";

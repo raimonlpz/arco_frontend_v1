@@ -1,6 +1,6 @@
 export const Categories = [
     {
-        id: 3,
+        id: 5,
         title: 'Transactions'
     },
     {
@@ -12,15 +12,15 @@ export const Categories = [
         title: 'Tokens'
     },
     {
-        id: 6,
+        id: 7,
         title: 'Events'
     },
     {
-        id: 7,
+        id: 6,
         title: 'Balances'
     },
     {
-        id: 9,
+        id: 4,
         title: 'Resolvers'
     },
 ]
